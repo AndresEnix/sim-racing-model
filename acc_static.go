@@ -53,8 +53,12 @@ type AccStaticMemory struct {
 	WetTyresName             [33]uint16
 }
 
-func (memory AccStaticMemory) FileName() string {
-	return "Local\\acpmf_static"
+func (memory AccStaticMemory) GetFileName() string {
+	return "acpmf_static"
+}
+
+func (memory AccStaticMemory) GetFilePath() string {
+	return fmt.Sprintf("Local\\%s", memory.GetFileName())
 }
 
 func (memory AccStaticMemory) Create(pointer uintptr) DataMemoryMapping {

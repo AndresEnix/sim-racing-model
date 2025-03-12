@@ -93,8 +93,12 @@ type AccPhysicsMemory struct {
 	AbsVibrations       float32
 }
 
-func (memory AccPhysicsMemory) FileName() string {
-	return "Local\\acpmf_physics"
+func (memory AccPhysicsMemory) GetFileName() string {
+	return "acpmf_physics"
+}
+
+func (memory AccPhysicsMemory) GetFilePath() string {
+	return fmt.Sprintf("Local\\%s", memory.GetFileName())
 }
 
 func (memory AccPhysicsMemory) Create(pointer uintptr) DataMemoryMapping {

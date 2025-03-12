@@ -95,8 +95,12 @@ type AccGraphicsMemory struct {
 	GapBehind                int32
 }
 
-func (memory AccGraphicsMemory) FileName() string {
-	return "Local\\acpmf_graphics"
+func (memory AccGraphicsMemory) GetFileName() string {
+	return "acpmf_graphics"
+}
+
+func (memory AccGraphicsMemory) GetFilePath() string {
+	return fmt.Sprintf("Local\\%s", memory.GetFileName())
 }
 
 func (memory AccGraphicsMemory) Create(pointer uintptr) DataMemoryMapping {

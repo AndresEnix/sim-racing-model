@@ -5,7 +5,8 @@ type Metric interface {
 }
 
 type DataMemoryMapping interface {
-	FileName() string
+	GetFileName() string
+	GetFilePath() string
 	Create(pointer uintptr) DataMemoryMapping
 	ToMetric() Metric
 }
