@@ -2,7 +2,7 @@ package model
 
 import (
 	"fmt"
-	"unicode/utf16"
+	"syscall"
 	"unsafe"
 )
 
@@ -64,15 +64,15 @@ func (memory AccStaticMemory) Create(pointer uintptr) DataMemoryMapping {
 
 func (memory AccStaticMemory) ToMetric() Metric {
 	return AccStaticMetric{
-		SmVersion:           string(utf16.Decode(memory.SmVersion[:])),
-		AcVersion:           string(utf16.Decode(memory.AcVersion[:])),
+		SmVersion:           string(syscall.UTF16ToString(memory.SmVersion[:])),
+		AcVersion:           string(syscall.UTF16ToString(memory.AcVersion[:])),
 		NumberOfSessions:    memory.NumberOfSessions,
 		NumCars:             memory.NumCars,
-		CarModel:            string(utf16.Decode(memory.CarModel[:])),
-		Track:               string(utf16.Decode(memory.Track[:])),
-		PlayerName:          string(utf16.Decode(memory.PlayerName[:])),
-		PlayerSurname:       string(utf16.Decode(memory.PlayerSurname[:])),
-		PlayerNick:          string(utf16.Decode(memory.PlayerNick[:])),
+		CarModel:            string(syscall.UTF16ToString(memory.CarModel[:])),
+		Track:               string(syscall.UTF16ToString(memory.Track[:])),
+		PlayerName:          string(syscall.UTF16ToString(memory.PlayerName[:])),
+		PlayerSurname:       string(syscall.UTF16ToString(memory.PlayerSurname[:])),
+		PlayerNick:          string(syscall.UTF16ToString(memory.PlayerNick[:])),
 		SectorCount:         memory.SectorCount,
 		MaxRpm:              memory.MaxRpm,
 		MaxFuel:             memory.MaxFuel,
@@ -87,8 +87,8 @@ func (memory AccStaticMemory) ToMetric() Metric {
 		PitWindowStart:      memory.PitWindowStart,
 		PitWindowEnd:        memory.PitWindowEnd,
 		IsOnline:            memory.IsOnline,
-		DryTyresName:        string(utf16.Decode(memory.DryTyresName[:])),
-		WetTyresName:        string(utf16.Decode(memory.WetTyresName[:])),
+		DryTyresName:        string(syscall.UTF16ToString(memory.DryTyresName[:])),
+		WetTyresName:        string(syscall.UTF16ToString(memory.WetTyresName[:])),
 	}
 }
 
