@@ -26,9 +26,3 @@ jobs:
 
     - name: Test
       run: go test -v ./...
-
-    - name: Build acc
-      run: go build -v ./acc/...
-
-    - name: Test acc
-      run: go test -v ./acc/...
