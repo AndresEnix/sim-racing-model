@@ -21,27 +21,15 @@ jobs:
     - name: Build
       run: go build -v ./...
 
-    - name: Get Latest Version Tag
-      id: get_version
-      shell: pwsh
-      run: |
-        $lastTag = git tag --sort=-v:refname | Select-Object -First 1
-        if (-not $lastTag) { $lastTag = "v0.0.0" }
-        echo "LATEST_TAG=$lastTag" | Out-File -FilePath $env:GITHUB_ENV -Append
-
     - name: Bump Version
-      id: bump_version
-      shell: pwsh
-      run: |
-        $lastTag = "${{ env.LATEST_TAG }}"
-        $parts = $lastTag -replace '^v', '' -split '\.'
-        $newVersion = "v$($parts[0]).$($parts[1]).$($parts[2] + 1)"
-        echo "NEW_VERSION=$newVersion" | Out-File -FilePath $env:GITHUB_ENV -Append
+      uses: actions-ecosystem/action-bump-semver@v1
+      id: bump
+      with:
+        tag_prefix: "v"
+        major_pattern: "^BREAKING CHANGE:"
+        minor_pattern: "^feat:"
+        patch_pattern: "^fix:"
 
-    - name: Create Git Tag
-      shell: pwsh
+    - name: Push Version Tag
       run: |
-        git config --global user.name "github-actions"
-        git config --global user.email "github-actions@github.com"
-        git tag ${{ env.NEW_VERSION }}
-        git push origin ${{ env.NEW_VERSION }}
+        git push origin ${{ steps.bump.outputs.new_tag }}
