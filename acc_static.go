@@ -1,11 +1,9 @@
-package acc
+package model
 
 import (
 	"fmt"
 	"syscall"
 	"unsafe"
-
-	"github.com/AndresEnix/simracing-telemetry-model/games"
 )
 
 type AccStaticMemory struct {
@@ -60,11 +58,11 @@ func (memory AccStaticMemory) FileName() string {
 	return "Local\\acpmf_static"
 }
 
-func (memory AccStaticMemory) Create(pointer uintptr) games.DataMemoryMapping {
+func (memory AccStaticMemory) Create(pointer uintptr) DataMemoryMapping {
 	return (*AccStaticMemory)(unsafe.Pointer(pointer))
 }
 
-func (memory AccStaticMemory) ToMetric() games.Metric {
+func (memory AccStaticMemory) ToMetric() Metric {
 	return AccStaticMetric{
 		SmVersion:           syscall.UTF16ToString(memory.SmVersion[:]),
 		AcVersion:           syscall.UTF16ToString(memory.AcVersion[:]),

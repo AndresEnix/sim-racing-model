@@ -1,11 +1,9 @@
-package acc
+package model
 
 import (
 	"fmt"
 	"syscall"
 	"unsafe"
-
-	"github.com/AndresEnix/simracing-telemetry-model/games"
 )
 
 type AccGraphicsMemory struct {
@@ -102,11 +100,11 @@ func (memory AccGraphicsMemory) FileName() string {
 	return "Local\\acpmf_graphics"
 }
 
-func (memory AccGraphicsMemory) Create(pointer uintptr) games.DataMemoryMapping {
+func (memory AccGraphicsMemory) Create(pointer uintptr) DataMemoryMapping {
 	return (*AccGraphicsMemory)(unsafe.Pointer(pointer))
 }
 
-func (memory AccGraphicsMemory) ToMetric() games.Metric {
+func (memory AccGraphicsMemory) ToMetric() Metric {
 	return AccGraphicsMetric{
 		PacketId:                 memory.PacketId,
 		Status:                   memory.Status,

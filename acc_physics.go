@@ -1,13 +1,11 @@
-package acc
+package model
 
 import (
 	"fmt"
 	"unsafe"
-
-	"github.com/AndresEnix/simracing-telemetry-model/games"
 )
 
-type PhysicsDataMemoryMapping struct {
+type AccPhysicsMemory struct {
 	PacketId            int32
 	Gas                 float32
 	Brake               float32
@@ -95,15 +93,15 @@ type PhysicsDataMemoryMapping struct {
 	AbsVibrations       float32
 }
 
-func (memory PhysicsDataMemoryMapping) FileName() string {
+func (memory AccPhysicsMemory) FileName() string {
 	return "Local\\acpmf_physics"
 }
 
-func (memory PhysicsDataMemoryMapping) Create(pointer uintptr) games.DataMemoryMapping {
-	return (*PhysicsDataMemoryMapping)(unsafe.Pointer(pointer))
+func (memory AccPhysicsMemory) Create(pointer uintptr) DataMemoryMapping {
+	return (*AccPhysicsMemory)(unsafe.Pointer(pointer))
 }
 
-func (memory PhysicsDataMemoryMapping) ToMetric() games.Metric {
+func (memory AccPhysicsMemory) ToMetric() Metric {
 	return PhysicsMetric{
 		PacketId:            memory.PacketId,
 		Gas:                 memory.Gas,
@@ -158,7 +156,6 @@ func (memory PhysicsDataMemoryMapping) ToMetric() games.Metric {
 		AbsVibrations:       memory.AbsVibrations,
 	}
 }
-
 
 type PhysicsMetric struct {
 	PacketId            int32

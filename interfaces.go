@@ -1,4 +1,4 @@
-package games
+package model
 
 type Metric interface {
     Print()
