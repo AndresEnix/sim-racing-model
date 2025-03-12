@@ -23,11 +23,13 @@ jobs:
 
     - name: Bump Version
       uses: actions-ecosystem/action-bump-semver@v1
-      id: bump
+      id: bump-semver
       with:
         current_version: v0.0.0
         level: patch
 
-    - name: Push Version Tag
-      run: |
-        git push origin ${{ steps.bump.outputs.new_tag }}
+    - name: Push Tag
+      uses: actions-ecosystem/action-push-tag@v1
+      with:
+        tag: ${{ steps.bump-semver.outputs.new_version }}
+        message: '${{ steps.bump-semver.outputs.new_version }}: PR #${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}'
