@@ -2,8 +2,8 @@ package model
 
 import (
 	"fmt"
-	"syscall"
 	"unsafe"
+	"golang.org/x/sys/windows"
 )
 
 type AccStaticMemory struct {
@@ -64,15 +64,15 @@ func (memory AccStaticMemory) Create(pointer uintptr) DataMemoryMapping {
 
 func (memory AccStaticMemory) ToMetric() Metric {
 	return AccStaticMetric{
-		SmVersion:           syscall.UTF16ToString(memory.SmVersion[:]),
-		AcVersion:           syscall.UTF16ToString(memory.AcVersion[:]),
+		SmVersion:           windows.UTF16ToString(memory.SmVersion[:]),
+		AcVersion:           windows.UTF16ToString(memory.AcVersion[:]),
 		NumberOfSessions:    memory.NumberOfSessions,
 		NumCars:             memory.NumCars,
-		CarModel:            syscall.UTF16ToString(memory.CarModel[:]),
-		Track:               syscall.UTF16ToString(memory.Track[:]),
-		PlayerName:          syscall.UTF16ToString(memory.PlayerName[:]),
-		PlayerSurname:       syscall.UTF16ToString(memory.PlayerSurname[:]),
-		PlayerNick:          syscall.UTF16ToString(memory.PlayerNick[:]),
+		CarModel:            windows.UTF16ToString(memory.CarModel[:]),
+		Track:               windows.UTF16ToString(memory.Track[:]),
+		PlayerName:          windows.UTF16ToString(memory.PlayerName[:]),
+		PlayerSurname:       windows.UTF16ToString(memory.PlayerSurname[:]),
+		PlayerNick:          windows.UTF16ToString(memory.PlayerNick[:]),
 		SectorCount:         memory.SectorCount,
 		MaxRpm:              memory.MaxRpm,
 		MaxFuel:             memory.MaxFuel,
@@ -87,8 +87,8 @@ func (memory AccStaticMemory) ToMetric() Metric {
 		PitWindowStart:      memory.PitWindowStart,
 		PitWindowEnd:        memory.PitWindowEnd,
 		IsOnline:            memory.IsOnline,
-		DryTyresName:        syscall.UTF16ToString(memory.DryTyresName[:]),
-		WetTyresName:        syscall.UTF16ToString(memory.WetTyresName[:]),
+		DryTyresName:        windows.UTF16ToString(memory.DryTyresName[:]),
+		WetTyresName:        windows.UTF16ToString(memory.WetTyresName[:]),
 	}
 }
 
