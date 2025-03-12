@@ -14,3 +14,6 @@ jobs:
         with:
           release-type: go
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish Go Module
+        run: go list -m github.com/AndresEnix/simracing-telemetry-model@$(git describe --tags --abbrev=0)
