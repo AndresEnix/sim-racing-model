@@ -25,10 +25,8 @@ jobs:
       uses: actions-ecosystem/action-bump-semver@v1
       id: bump
       with:
-        tag_prefix: "v"
-        major_pattern: "^BREAKING CHANGE:"
-        minor_pattern: "^feat:"
-        patch_pattern: "^fix:"
+        current_version: latest
+        level: patch
 
     - name: Push Version Tag
       run: |
