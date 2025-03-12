@@ -1,11 +1,15 @@
 package model
 
-func GetMemoryFiles(fileName string, targetStruct any) map[string][]DataMemoryMapping {
-	return map[string][]DataMemoryMapping{
+var (
+	gameMapping = map[string][]DataMemoryMapping{
 		"ACC": {
 			AccGraphicsMemory{},
 			AccPhysicsMemory{},
 			AccStaticMemory{},
 		},
 	}
+)
+
+func GetMemoryFiles(gameId string) []DataMemoryMapping {
+	return gameMapping[gameId]
 }
