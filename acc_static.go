@@ -2,7 +2,7 @@ package model
 
 import (
 	"fmt"
-	"golang.org/x/sys/windows"
+	"unicode/utf16"
 	"unsafe"
 )
 
@@ -64,15 +64,15 @@ func (memory AccStaticMemory) Create(pointer uintptr) DataMemoryMapping {
 
 func (memory AccStaticMemory) ToMetric() Metric {
 	return AccStaticMetric{
-		SmVersion:           windows.UTF16ToString(memory.SmVersion[:]),
-		AcVersion:           windows.UTF16ToString(memory.AcVersion[:]),
+		SmVersion:           string(utf16.Decode(memory.SmVersion[:])),
+		AcVersion:           string(utf16.Decode(memory.AcVersion[:])),
 		NumberOfSessions:    memory.NumberOfSessions,
 		NumCars:             memory.NumCars,
-		CarModel:            windows.UTF16ToString(memory.CarModel[:]),
-		Track:               windows.UTF16ToString(memory.Track[:]),
-		PlayerName:          windows.UTF16ToString(memory.PlayerName[:]),
-		PlayerSurname:       windows.UTF16ToString(memory.PlayerSurname[:]),
-		PlayerNick:          windows.UTF16ToString(memory.PlayerNick[:]),
+		CarModel:            string(utf16.Decode(memory.CarModel[:])),
+		Track:               string(utf16.Decode(memory.Track[:])),
+		PlayerName:          string(utf16.Decode(memory.PlayerName[:])),
+		PlayerSurname:       string(utf16.Decode(memory.PlayerSurname[:])),
+		PlayerNick:          string(utf16.Decode(memory.PlayerNick[:])),
 		SectorCount:         memory.SectorCount,
 		MaxRpm:              memory.MaxRpm,
 		MaxFuel:             memory.MaxFuel,
@@ -87,8 +87,8 @@ func (memory AccStaticMemory) ToMetric() Metric {
 		PitWindowStart:      memory.PitWindowStart,
 		PitWindowEnd:        memory.PitWindowEnd,
 		IsOnline:            memory.IsOnline,
-		DryTyresName:        windows.UTF16ToString(memory.DryTyresName[:]),
-		WetTyresName:        windows.UTF16ToString(memory.WetTyresName[:]),
+		DryTyresName:        string(utf16.Decode(memory.DryTyresName[:])),
+		WetTyresName:        string(utf16.Decode(memory.WetTyresName[:])),
 	}
 }
 
