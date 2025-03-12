@@ -20,23 +20,3 @@ jobs:
 
     - name: Build
       run: go build -v ./...
-
-  release:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-    - name: Chechout
-      uses: actions/checkout@v4
-
-    - name: Bump Version
-      uses: actions-ecosystem/action-bump-semver@v1
-      id: bump-semver
-      with:
-        current_version: v0.0.0
-        level: patch
-
-    - name: Push Tag
-      uses: actions-ecosystem/action-push-tag@v1
-      with:
-        tag: ${{ steps.bump-semver.outputs.new_version }}
-        message: '${{ steps.bump-semver.outputs.new_version }}: PR #${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}'
