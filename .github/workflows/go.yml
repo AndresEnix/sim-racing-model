@@ -21,12 +21,27 @@ jobs:
     - name: Build
       run: go build -v ./...
 
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Release Please
-        uses: google-github-actions/release-please-action@v4
-        with:
-          release-type: go
-          token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Get Latest Version Tag
+      id: get_version
+      shell: pwsh
+      run: |
+        $lastTag = git tag --sort=-v:refname | Select-Object -First 1
+        if (-not $lastTag) { $lastTag = "v0.0.0" }
+        echo "LATEST_TAG=$lastTag" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+    - name: Bump Version
+      id: bump_version
+      shell: pwsh
+      run: |
+        $lastTag = "${{ env.LATEST_TAG }}"
+        $parts = $lastTag -replace '^v', '' -split '\.'
+        $newVersion = "v$($parts[0]).$($parts[1]).$($parts[2] + 1)"
+        echo "NEW_VERSION=$newVersion" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+    - name: Create Git Tag
+      shell: pwsh
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@github.com"
+        git tag ${{ env.NEW_VERSION }}
+        git push origin ${{ env.NEW_VERSION }}
