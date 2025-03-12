@@ -1,4 +1,4 @@
-# Build golang project
+# Build golang project 
 name: Go
 
 on:
