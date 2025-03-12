@@ -1,5 +1,3 @@
-module github.com/AndresEnix/simracing-telemetry-model/games
+module github.com/AndresEnix/simracing-telemetry-client
 
-go 1.23
-
-replace github.com/AndresEnix/simracing-telemetry-model/acc => ./acc
+go 1.23.0
