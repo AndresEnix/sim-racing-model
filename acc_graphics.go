@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-	"syscall"
 	"unsafe"
 )
 
@@ -109,10 +108,10 @@ func (memory AccGraphicsMemory) ToMetric() Metric {
 		PacketId:                 memory.PacketId,
 		Status:                   memory.Status,
 		Session:                  memory.Session,
-		CurrentTime:              string(syscall.UTF16ToString(memory.CurrentTime[:])),
-		LastTime:                 string(syscall.UTF16ToString(memory.LastTime[:])),
-		BestTime:                 string(syscall.UTF16ToString(memory.BestTime[:])),
-		Split:                    string(syscall.UTF16ToString(memory.Split[:])),
+		CurrentTime:              uint16ToString(memory.CurrentTime[:]),
+		LastTime:                 uint16ToString(memory.LastTime[:]),
+		BestTime:                 uint16ToString(memory.BestTime[:]),
+		Split:                    uint16ToString(memory.Split[:]),
 		CompletedLaps:            memory.CompletedLaps,
 		Position:                 memory.Position,
 		ICurrentTime:             memory.ICurrentTime,
@@ -124,7 +123,7 @@ func (memory AccGraphicsMemory) ToMetric() Metric {
 		CurrentSectorIndex:       memory.CurrentSectorIndex,
 		LastSectorTime:           memory.LastSectorTime,
 		NumberOfLaps:             memory.NumberOfLaps,
-		TyreCompound:             string(syscall.UTF16ToString(memory.TyreCompound[:])),
+		TyreCompound:             uint16ToString(memory.TyreCompound[:]),
 		NormalizedCarPosition:    memory.NormalizedCarPosition,
 		ActiveCars:               memory.ActiveCars,
 		AarCoordinates:           memory.AarCoordinates,
@@ -157,15 +156,15 @@ func (memory AccGraphicsMemory) ToMetric() Metric {
 		RainTyres:                memory.RainTyres,
 		SessionIndex:             memory.SessionIndex,
 		UsedFuel:                 memory.UsedFuel,
-		DeltaLapTime:             string(syscall.UTF16ToString(memory.DeltaLapTime[:])),
+		DeltaLapTime:             uint16ToString(memory.DeltaLapTime[:]),
 		IDeltaLapTime:            memory.IDeltaLapTime,
-		EstimatedLapTime:         string(syscall.UTF16ToString(memory.EstimatedLapTime[:])),
+		EstimatedLapTime:         uint16ToString(memory.EstimatedLapTime[:]),
 		IEstimatedLapTime:        memory.IEstimatedLapTime,
 		IsDeltaPositive:          memory.IsDeltaPositive,
 		ISplit:                   memory.ISplit,
 		IsValidLap:               memory.IsValidLap,
 		FuelEstimatedLaps:        memory.FuelEstimatedLaps,
-		TrackStatus:              string(syscall.UTF16ToString(memory.TrackStatus[:])),
+		TrackStatus:              uint16ToString(memory.TrackStatus[:]),
 		MissingMandatoryPits:     memory.MissingMandatoryPits,
 		Clock:                    memory.Clock,
 		DirectionLightsLeft:      memory.DirectionLightsLeft,
