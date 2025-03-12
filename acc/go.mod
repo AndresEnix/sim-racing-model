@@ -1,4 +1,4 @@
-module github.com/AndresEnix/simracing-telemetry-model/games/acc
+module github.com/AndresEnix/simracing-telemetry-model/acc
 
 go 1.23.0
 
