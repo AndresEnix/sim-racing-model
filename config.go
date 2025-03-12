@@ -16,11 +16,16 @@ var (
 			AccStaticMemory{},
 		},
 	}
-	AvailableGames = []string{
-		ASSETTO_CORSA_COMPETIZIONE,
-	}
 )
 
 func GetMemoryFiles(gameId string) []DataMemoryMapping {
 	return gameMemoryMapping[strings.ToUpper(gameId)]
+}
+
+func GetMemoryGames() []string {
+	games := make([]string, 0, len(gameMemoryMapping))
+	for game := range gameMemoryMapping {
+		games = append(games, game)
+	}
+	return games
 }
