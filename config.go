@@ -11,10 +11,15 @@ const (
 var (
 	gameMemoryMapping = map[string][]DataMemoryMapping{
 		ASSETTO_CORSA_COMPETIZIONE: {
-			AccGraphicsMemory{},
 			AccPhysicsMemory{},
+			AccGraphicsMemory{},
 			AccStaticMemory{},
 		},
+	}
+	memoryFimeMetricMapping = map[string]Metric{
+		AccPhysicsMemory{}.GetFileName():  AccGraphicsMetric{},
+		AccGraphicsMemory{}.GetFileName(): AccGraphicsMetric{},
+		AccStaticMemory{}.GetFileName():   AccStaticMetric{},
 	}
 )
 
@@ -28,4 +33,8 @@ func GetMemoryGames() []string {
 		games = append(games, game)
 	}
 	return games
+}
+
+func GetMetricByMemoryFileName(fileName string) Metric {
+	return memoryFimeMetricMapping[strings.ToUpper(fileName)]
 }
