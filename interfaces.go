@@ -1,12 +1,14 @@
 package model
 
-type Metric interface {
-	GetFields() []string
+type SharedMemoryData interface {
+	Name() string
+	Path() string
+	ToMetrics() Metrics
+	Create(pointer uintptr) SharedMemoryData
 }
 
-type DataMemoryMapping interface {
-	GetFileName() string
-	GetFilePath() string
-	Create(pointer uintptr) DataMemoryMapping
-	ToMetric() Metric
+type Metrics interface {
+	Game() string
+	Name() string
+	DataPoints() []string
 }

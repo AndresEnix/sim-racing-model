@@ -1,40 +1,39 @@
 package model
 
-import (
-	"strings"
-)
-
+// Game constants
 const (
-	ASSETTO_CORSA_COMPETIZIONE = "ACC"
+	ASSETTO_CORSA_COMPETIZIONE = "acc"
 )
 
+// Shared memory constants
+const (
+	ACC_FILES_PREFIX = "Local\\"
+	ACC_PHYSICS_FILE_NAME = "acpmf_physics"
+	ACC_GRAPHICS_FILE_NAME = "acpmf_graphics"
+	ACC_STATIC_FILE_NAME = "acpmf_static"
+)
+
+// Metric constants
+const (
+	ACC_PHYSICS_METRICS_NAME = "acpmf_physics"
+	ACC_GRAPHICS_METRICS_NAME = "acpmf_graphics"
+	ACC_STATIC_METRICS_NAME = "acpmf_static"
+)
+
+// Collections
 var (
-	gameMemoryMapping = map[string][]DataMemoryMapping{
+	gameMemoryMapping = map[string][]SharedMemoryData{
 		ASSETTO_CORSA_COMPETIZIONE: {
-			AccPhysicsMemory{},
-			AccGraphicsMemory{},
-			AccStaticMemory{},
+			AccPhysicsData{},
+			AccGraphicsData{},
+			AccStaticData{},
 		},
 	}
-	memoryFimeMetricMapping = map[string]Metric{
-		AccPhysicsMemory{}.GetFileName():  AccGraphicsMetric{},
-		AccGraphicsMemory{}.GetFileName(): AccGraphicsMetric{},
-		AccStaticMemory{}.GetFileName():   AccStaticMetric{},
+	gameMetricsMapping = map[string][]Metrics{
+		ASSETTO_CORSA_COMPETIZIONE: {
+			AccPhysicsMetrics{},
+			AccGraphicsMetrics{},
+			AccStaticMetrics{},
+		},
 	}
 )
-
-func GetMemoryFiles(gameId string) []DataMemoryMapping {
-	return gameMemoryMapping[strings.ToUpper(gameId)]
-}
-
-func GetMemoryGames() []string {
-	games := make([]string, 0, len(gameMemoryMapping))
-	for game := range gameMemoryMapping {
-		games = append(games, game)
-	}
-	return games
-}
-
-func GetMetricByMemoryFileName(fileName string) Metric {
-	return memoryFimeMetricMapping[fileName]
-}

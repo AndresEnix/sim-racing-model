@@ -1,11 +1,10 @@
 package model
 
 import (
-	"fmt"
 	"unsafe"
 )
 
-type AccStaticMemory struct {
+type AccStaticData struct {
 	SmVersion                [15]uint16
 	AcVersion                [15]uint16
 	NumberOfSessions         int32
@@ -53,20 +52,20 @@ type AccStaticMemory struct {
 	WetTyresName             [33]uint16
 }
 
-func (memory AccStaticMemory) GetFileName() string {
-	return "acpmf_static"
+func (memory AccStaticData) Name() string {
+	return ACC_STATIC_FILE_NAME
 }
 
-func (memory AccStaticMemory) GetFilePath() string {
-	return fmt.Sprintf("Local\\%s", memory.GetFileName())
+func (memory AccStaticData) Path() string {
+	return ACC_FILES_PREFIX + memory.Name()
 }
 
-func (memory AccStaticMemory) Create(pointer uintptr) DataMemoryMapping {
-	return (*AccStaticMemory)(unsafe.Pointer(pointer))
+func (memory AccStaticData) Create(pointer uintptr) SharedMemoryData {
+	return (*AccStaticData)(unsafe.Pointer(pointer))
 }
 
-func (memory AccStaticMemory) ToMetric() Metric {
-	return AccStaticMetric{
+func (memory AccStaticData) ToMetrics() Metrics {
+	return AccStaticMetrics{
 		SmVersion:           uint16ToString(memory.SmVersion[:]),
 		AcVersion:           uint16ToString(memory.AcVersion[:]),
 		NumberOfSessions:    memory.NumberOfSessions,
@@ -93,36 +92,4 @@ func (memory AccStaticMemory) ToMetric() Metric {
 		DryTyresName:        uint16ToString(memory.DryTyresName[:]),
 		WetTyresName:        uint16ToString(memory.WetTyresName[:]),
 	}
-}
-
-type AccStaticMetric struct {
-	SmVersion           string  `json:"SmVersion"`
-	AcVersion           string  `json:"AcVersion"`
-	NumberOfSessions    int32   `json:"NumberOfSessions"`
-	NumCars             int32   `json:"NumCars"`
-	CarModel            string  `json:"CarModel"`
-	Track               string  `json:"Track"`
-	PlayerName          string  `json:"PlayerName"`
-	PlayerSurname       string  `json:"PlayerSurname"`
-	PlayerNick          string  `json:"PlayerNick"`
-	SectorCount         int32   `json:"SectorCount"`
-	MaxRpm              int32   `json:"MaxRpm"`
-	MaxFuel             float32 `json:"MaxFuel"`
-	PenaltiesEnabled    int32   `json:"PenaltiesEnabled"`
-	AidFuelRate         float32 `json:"AidFuelRate"`
-	AidTireRate         float32 `json:"AidTireRate"`
-	AidMechanicalDamage float32 `json:"AidMechanicalDamage"`
-	AllowTyreBlankets   float32 `json:"AllowTyreBlankets"`
-	AidStability        float32 `json:"AidStability"`
-	AidAutoclutch       int32   `json:"AidAutoclutch"`
-	AidAutoBlip         int32   `json:"AidAutoBlip"`
-	PitWindowStart      int32   `json:"PitWindowStart"`
-	PitWindowEnd        int32   `json:"PitWindowEnd"`
-	IsOnline            int32   `json:"IsOnline"`
-	DryTyresName        string  `json:"DryTyresName"`
-	WetTyresName        string  `json:"WetTyresName"`
-}
-
-func (metric AccStaticMetric) GetFields() []string {
-	return getFieldNames(metric);
 }

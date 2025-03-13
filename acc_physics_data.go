@@ -1,11 +1,10 @@
 package model
 
 import (
-	"fmt"
 	"unsafe"
 )
 
-type AccPhysicsMemory struct {
+type AccPhysicsData struct {
 	PacketId            int32
 	Gas                 float32
 	Brake               float32
@@ -93,20 +92,20 @@ type AccPhysicsMemory struct {
 	AbsVibrations       float32
 }
 
-func (memory AccPhysicsMemory) GetFileName() string {
-	return "acpmf_physics"
+func (memory AccPhysicsData) Name() string {
+	return ACC_PHYSICS_FILE_NAME
 }
 
-func (memory AccPhysicsMemory) GetFilePath() string {
-	return fmt.Sprintf("Local\\%s", memory.GetFileName())
+func (memory AccPhysicsData) Path() string {
+	return ACC_FILES_PREFIX + memory.Name()
 }
 
-func (memory AccPhysicsMemory) Create(pointer uintptr) DataMemoryMapping {
-	return (*AccPhysicsMemory)(unsafe.Pointer(pointer))
+func (memory AccPhysicsData) Create(pointer uintptr) SharedMemoryData {
+	return (*AccPhysicsData)(unsafe.Pointer(pointer))
 }
 
-func (memory AccPhysicsMemory) ToMetric() Metric {
-	return PhysicsMetric{
+func (memory AccPhysicsData) ToMetrics() Metrics {
+	return AccPhysicsMetrics{
 		PacketId:            memory.PacketId,
 		Gas:                 memory.Gas,
 		Brake:               memory.Brake,
@@ -159,62 +158,4 @@ func (memory AccPhysicsMemory) ToMetric() Metric {
 		GVibrations:         memory.GVibrations,
 		AbsVibrations:       memory.AbsVibrations,
 	}
-}
-
-type PhysicsMetric struct {
-	PacketId            int32         `json:"PacketId"`
-	Gas                 float32       `json:"Gas"`
-	Brake               float32       `json:"Brake"`
-	Fuel                float32       `json:"Fuel"`
-	Gear                int32         `json:"Gear"`
-	RPM                 int32         `json:"RPM"`
-	SteerAngle          float32       `json:"SteerAngle"`
-	SpeedKmh            float32       `json:"SpeedKmh"`
-	Velocity            [3]float32    `json:"Velocity"`
-	AccG                [3]float32    `json:"AccG"`
-	WheelSlip           [4]float32    `json:"WheelSlip"`
-	WheelPressure       [4]float32    `json:"WheelPressure"`
-	WheelAngularSpeed   [4]float32    `json:"WheelAngularSpeed"`
-	TyreCoreTemperature [4]float32    `json:"TyreCoreTemperature"`
-	SuspensionTravel    [4]float32    `json:"SuspensionTravel"`
-	TC                  float32       `json:"TC"`
-	Heading             float32       `json:"Heading"`
-	Pitch               float32       `json:"Pitch"`
-	Roll                float32       `json:"Roll"`
-	CarDamage           [5]float32    `json:"CarDamage"`
-	PitLimiterOn        int32         `json:"PitLimiterOn"`
-	ABS                 float32       `json:"ABS"`
-	AutoshifterOn       int32         `json:"AutoshifterOn"`
-	TurboBoost          float32       `json:"TurboBoost"`
-	AirTemp             float32       `json:"AirTemp"`
-	RoadTemp            float32       `json:"RoadTemp"`
-	LocalAngularVel     [3]float32    `json:"LocalAngularVel"`
-	FinalFF             float32       `json:"FinalFF"`
-	BrakeTemp           [4]float32    `json:"BrakeTemp"`
-	Clutch              float32       `json:"Clutch"`
-	IsAIControlled      int32         `json:"IsAIControlled"`
-	TyreContactPoint    [4][3]float32 `json:"TyreContactPoint"`
-	TyreContactNormal   [4][3]float32 `json:"TyreContactNormal"`
-	TyreContactHeading  [4][3]float32 `json:"TyreContactHeading"`
-	BrakeBias           float32       `json:"BrakeBias"`
-	LocalVelocity       [3]float32    `json:"LocalVelocity"`
-	SlipRatio           [4]float32    `json:"SlipRatio"`
-	SlipAngle           [4]float32    `json:"SlipAngle"`
-	WaterTemp           float32       `json:"WaterTemp"`
-	BrakePressure       [4]float32    `json:"BrakePressure"`
-	FrontBrakeCompound  int32         `json:"FrontBrakeCompound"`
-	RearBrakeCompound   int32         `json:"RearBrakeCompound"`
-	PadLife             [4]float32    `json:"PadLife"`
-	DiscLife            [4]float32    `json:"DiscLife"`
-	IgnitionOn          int32         `json:"IgnitionOn"`
-	StarterEngineOn     int32         `json:"StarterEngineOn"`
-	IsEngineRunning     int32         `json:"IsEngineRunning"`
-	KerbVibration       float32       `json:"KerbVibration"`
-	SlipVibrations      float32       `json:"SlipVibrations"`
-	GVibrations         float32       `json:"GVibrations"`
-	AbsVibrations       float32       `json:"AbsVibrations"`
-}
-
-func (metric PhysicsMetric) GetFields() []string {
-	return getFieldNames(metric);
 }
