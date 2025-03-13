@@ -123,6 +123,6 @@ type AccStaticMetric struct {
 	WetTyresName        string  `json:"WetTyresName"`
 }
 
-func (metric AccStaticMetric) Print() {
-	fmt.Println("")
+func (metric AccStaticMetric) GetFields() []string {
+	return getFieldNames(metric);
 }

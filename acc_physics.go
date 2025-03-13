@@ -215,6 +215,6 @@ type PhysicsMetric struct {
 	AbsVibrations       float32       `json:"AbsVibrations"`
 }
 
-func (metric PhysicsMetric) Print() {
-	fmt.Println("")
+func (metric PhysicsMetric) GetFields() []string {
+	return getFieldNames(metric);
 }

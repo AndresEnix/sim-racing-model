@@ -1,7 +1,7 @@
 package model
 
 type Metric interface {
-	Print()
+	GetFields() []string
 }
 
 type DataMemoryMapping interface {

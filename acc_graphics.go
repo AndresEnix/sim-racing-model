@@ -287,6 +287,6 @@ type AccGraphicsMetric struct {
 	GapBehind                int32          `json:"GapBehind"`
 }
 
-func (metric AccGraphicsMetric) Print() {
-	fmt.Println("")
+func (metric AccGraphicsMetric) GetFields() []string {
+	return getFieldNames(metric);
 }

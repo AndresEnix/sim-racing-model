@@ -1,6 +1,7 @@
 package model
 
 import (
+	"reflect"
 	"unicode/utf16"
 )
 
@@ -16,4 +17,15 @@ func trimTrailingNulls(data []uint16) []uint16 {
 		}
 	}
 	return data
+}
+
+func getFieldNames(i interface{}) []string {
+	v := reflect.ValueOf(i)
+	t := v.Type()
+
+	var fieldNames []string
+	for i := 0; i < v.NumField(); i++ {
+		fieldNames = append(fieldNames, t.Field(i).Name)
+	}
+	return fieldNames
 }
