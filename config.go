@@ -16,7 +16,7 @@ var (
 			AccStaticMemory{},
 		},
 	}
-	memoryFimeMetricMapping = map[string]Metric{
+	memoryFimeMetricMapping = map[string]any{
 		AccPhysicsMemory{}.GetFileName():  AccGraphicsMetric{},
 		AccGraphicsMemory{}.GetFileName(): AccGraphicsMetric{},
 		AccStaticMemory{}.GetFileName():   AccStaticMetric{},
@@ -35,6 +35,6 @@ func GetMemoryGames() []string {
 	return games
 }
 
-func GetMetricByMemoryFileName(fileName string) Metric {
+func GetMetricByMemoryFileName(fileName string) any {
 	return memoryFimeMetricMapping[fileName]
 }
