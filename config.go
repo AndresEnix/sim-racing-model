@@ -36,5 +36,5 @@ func GetMemoryGames() []string {
 }
 
 func GetMetricByMemoryFileName(fileName string) Metric {
-	return memoryFimeMetricMapping[strings.ToUpper(fileName)]
+	return memoryFimeMetricMapping[fileName]
 }
