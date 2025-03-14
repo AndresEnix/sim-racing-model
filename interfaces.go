@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 type SharedMemoryData interface {
 	Name() string
 	Path() string
@@ -11,4 +13,5 @@ type Metrics interface {
 	Game() string
 	Name() string
 	DataPoints() []string
+	SetFingerprint(userId, sessionId string, timestamp time.Time)
 }

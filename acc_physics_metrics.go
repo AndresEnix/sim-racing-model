@@ -71,3 +71,9 @@ func (metric AccPhysicsMetrics) Name() string {
 func (metric AccPhysicsMetrics) DataPoints() []string {
 	return getStructFieldNames(metric)
 }
+
+func (metric AccPhysicsMetrics) SetFingerprint(userId, sessionId string, timestamp time.Time) {
+	metric.UserId = userId
+	metric.SessionId = sessionId
+	metric.Timestamp = timestamp
+}

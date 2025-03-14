@@ -45,3 +45,9 @@ func (metric AccStaticMetrics) Name() string {
 func (metric AccStaticMetrics) DataPoints() []string {
 	return getStructFieldNames(metric)
 }
+
+func (metric AccStaticMetrics) SetFingerprint(userId, sessionId string, timestamp time.Time) {
+	metric.UserId = userId
+	metric.SessionId = sessionId
+	metric.Timestamp = timestamp
+}
