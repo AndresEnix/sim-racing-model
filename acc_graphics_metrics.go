@@ -1,6 +1,12 @@
 package model
 
+import "time"
+
 type AccGraphicsMetrics struct {
+	Id                       string         `json:"Id"`
+	UserId                   string         `json:"UserId"`
+	SessionId                string         `json:"SessionId"`
+	Timestamp                time.Time      `json:"Timestamp"`
 	PacketId                 int32          `json:"PacketId"`
 	Status                   int32          `json:"Status"`
 	Session                  int32          `json:"Session"`
@@ -36,7 +42,7 @@ type AccGraphicsMetrics struct {
 	WindDirection            float32        `json:"WindDirection"`
 	IsSetupMenuVisible       int32          `json:"IsSetupMenuVisible"`
 	MainDisplayIndex         int32          `json:"MainDisplayIndex"`
-	SecondaryDisplayIndex     int32          `json:"SecondaryDisplayIndex"`
+	SecondaryDisplayIndex    int32          `json:"SecondaryDisplayIndex"`
 	Tc                       int32          `json:"Tc"`
 	TcCut                    int32          `json:"TcCut"`
 	EngineMap                int32          `json:"EngineMap"`

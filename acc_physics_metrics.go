@@ -1,6 +1,12 @@
 package model
 
+import "time"
+
 type AccPhysicsMetrics struct {
+	Id                  string        `json:"Id"`
+	UserId              string        `json:"UserId"`
+	SessionId           string        `json:"SessionId"`
+	Timestamp           time.Time     `json:"Timestamp"`
 	PacketId            int32         `json:"PacketId"`
 	Gas                 float32       `json:"Gas"`
 	Brake               float32       `json:"Brake"`

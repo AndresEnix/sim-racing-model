@@ -7,17 +7,17 @@ const (
 
 // Shared memory constants
 const (
-	ACC_FILES_PREFIX = "Local\\"
-	ACC_PHYSICS_FILE_NAME = "acpmf_physics"
+	ACC_FILES_PREFIX       = "Local\\"
+	ACC_PHYSICS_FILE_NAME  = "acpmf_physics"
 	ACC_GRAPHICS_FILE_NAME = "acpmf_graphics"
-	ACC_STATIC_FILE_NAME = "acpmf_static"
+	ACC_STATIC_FILE_NAME   = "acpmf_static"
 )
 
 // Metric constants
 const (
-	ACC_PHYSICS_METRICS_NAME = "acpmf_physics"
+	ACC_PHYSICS_METRICS_NAME  = "acpmf_physics"
 	ACC_GRAPHICS_METRICS_NAME = "acpmf_graphics"
-	ACC_STATIC_METRICS_NAME = "acpmf_static"
+	ACC_STATIC_METRICS_NAME   = "acpmf_static"
 )
 
 // Collections
