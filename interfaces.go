@@ -1,17 +1,14 @@
 package model
 
-import "time"
-
 type SharedMemoryData interface {
 	Name() string
 	Path() string
-	ToMetrics() Metrics
-	Create(pointer uintptr) SharedMemoryData
+	CreateMetric(pointer uintptr) Metrics
 }
 
 type Metrics interface {
 	Game() string
 	Name() string
 	DataPoints() []string
-	SetFingerprint(userId, sessionId string, timestamp time.Time)
+	AddSessionInfo(userId, sessionId string)
 }

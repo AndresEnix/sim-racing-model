@@ -95,20 +95,19 @@ type AccGraphicsMetrics struct {
 	GapBehind                int32          `json:"GapBehind"`
 }
 
-func (metric AccGraphicsMetrics) Game() string {
+func (metric *AccGraphicsMetrics) Game() string {
 	return ASSETTO_CORSA_COMPETIZIONE
 }
 
-func (metric AccGraphicsMetrics) Name() string {
+func (metric *AccGraphicsMetrics) Name() string {
 	return ACC_GRAPHICS_METRICS_NAME
 }
 
-func (metric AccGraphicsMetrics) DataPoints() []string {
+func (metric *AccGraphicsMetrics) DataPoints() []string {
 	return getStructFieldNames(metric)
 }
 
-func (metric AccGraphicsMetrics) SetFingerprint(userId, sessionId string, timestamp time.Time) {
+func (metric *AccGraphicsMetrics) AddSessionInfo(userId, sessionId string) {
 	metric.UserId = userId
 	metric.SessionId = sessionId
-	metric.Timestamp = timestamp
 }

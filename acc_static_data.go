@@ -1,6 +1,7 @@
 package model
 
 import (
+	"time"
 	"unsafe"
 )
 
@@ -52,20 +53,18 @@ type AccStaticData struct {
 	WetTyresName             [33]uint16
 }
 
-func (memory AccStaticData) Name() string {
+func (memory *AccStaticData) Name() string {
 	return ACC_STATIC_FILE_NAME
 }
 
-func (memory AccStaticData) Path() string {
+func (memory *AccStaticData) Path() string {
 	return ACC_FILES_PREFIX + memory.Name()
 }
 
-func (memory AccStaticData) Create(pointer uintptr) SharedMemoryData {
-	return (*AccStaticData)(unsafe.Pointer(pointer))
-}
-
-func (memory AccStaticData) ToMetrics() Metrics {
-	return AccStaticMetrics{
+func (memory *AccStaticData) CreateMetric(pointer uintptr) Metrics {
+	memory = (*AccStaticData)(unsafe.Pointer(pointer))
+	return &AccStaticMetrics{
+		Timestamp:           time.Now().UTC(),
 		SmVersion:           uint16ToString(memory.SmVersion[:]),
 		AcVersion:           uint16ToString(memory.AcVersion[:]),
 		NumberOfSessions:    memory.NumberOfSessions,

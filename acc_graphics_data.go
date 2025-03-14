@@ -1,6 +1,7 @@
 package model
 
 import (
+	"time"
 	"unsafe"
 )
 
@@ -94,20 +95,18 @@ type AccGraphicsData struct {
 	GapBehind                int32
 }
 
-func (memory AccGraphicsData) Name() string {
+func (memory *AccGraphicsData) Name() string {
 	return ACC_GRAPHICS_FILE_NAME
 }
 
-func (memory AccGraphicsData) Path() string {
+func (memory *AccGraphicsData) Path() string {
 	return ACC_FILES_PREFIX + memory.Name()
 }
 
-func (memory AccGraphicsData) Create(pointer uintptr) SharedMemoryData {
-	return (*AccGraphicsData)(unsafe.Pointer(pointer))
-}
-
-func (memory AccGraphicsData) ToMetrics() Metrics {
-	return AccGraphicsMetrics{
+func (memory *AccGraphicsData) CreateMetric(pointer uintptr) Metrics {
+	memory = (*AccGraphicsData)(unsafe.Pointer(pointer))
+	return &AccGraphicsMetrics{
+		Timestamp:                time.Now().UTC(),
 		PacketId:                 memory.PacketId,
 		Status:                   memory.Status,
 		Session:                  memory.Session,

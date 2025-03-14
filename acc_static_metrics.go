@@ -34,20 +34,19 @@ type AccStaticMetrics struct {
 	WetTyresName        string    `json:"WetTyresName"`
 }
 
-func (metric AccStaticMetrics) Game() string {
+func (metric *AccStaticMetrics) Game() string {
 	return ASSETTO_CORSA_COMPETIZIONE
 }
 
-func (metric AccStaticMetrics) Name() string {
+func (metric *AccStaticMetrics) Name() string {
 	return ACC_STATIC_METRICS_NAME
 }
 
-func (metric AccStaticMetrics) DataPoints() []string {
+func (metric *AccStaticMetrics) DataPoints() []string {
 	return getStructFieldNames(metric)
 }
 
-func (metric AccStaticMetrics) SetFingerprint(userId, sessionId string, timestamp time.Time) {
+func (metric *AccStaticMetrics) AddSessionInfo(userId, sessionId string) {
 	metric.UserId = userId
 	metric.SessionId = sessionId
-	metric.Timestamp = timestamp
 }

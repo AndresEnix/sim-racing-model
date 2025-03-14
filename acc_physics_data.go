@@ -1,6 +1,7 @@
 package model
 
 import (
+	"time"
 	"unsafe"
 )
 
@@ -92,20 +93,18 @@ type AccPhysicsData struct {
 	AbsVibrations       float32
 }
 
-func (memory AccPhysicsData) Name() string {
+func (memory *AccPhysicsData) Name() string {
 	return ACC_PHYSICS_FILE_NAME
 }
 
-func (memory AccPhysicsData) Path() string {
+func (memory *AccPhysicsData) Path() string {
 	return ACC_FILES_PREFIX + memory.Name()
 }
 
-func (memory AccPhysicsData) Create(pointer uintptr) SharedMemoryData {
-	return (*AccPhysicsData)(unsafe.Pointer(pointer))
-}
-
-func (memory AccPhysicsData) ToMetrics() Metrics {
-	return AccPhysicsMetrics{
+func (memory *AccPhysicsData) CreateMetric(pointer uintptr) Metrics {
+	memory = (*AccPhysicsData)(unsafe.Pointer(pointer))
+	return &AccPhysicsMetrics{
+		Timestamp:           time.Now().UTC(),
 		PacketId:            memory.PacketId,
 		Gas:                 memory.Gas,
 		Brake:               memory.Brake,

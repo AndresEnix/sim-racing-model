@@ -24,16 +24,16 @@ const (
 var (
 	gameMemoryMapping = map[string][]SharedMemoryData{
 		ASSETTO_CORSA_COMPETIZIONE: {
-			AccPhysicsData{},
-			AccGraphicsData{},
-			AccStaticData{},
+			&AccPhysicsData{},
+			&AccGraphicsData{},
+			&AccStaticData{},
 		},
 	}
 	gameMetricsMapping = map[string][]Metrics{
 		ASSETTO_CORSA_COMPETIZIONE: {
-			AccPhysicsMetrics{},
-			AccGraphicsMetrics{},
-			AccStaticMetrics{},
+			&AccPhysicsMetrics{},
+			&AccGraphicsMetrics{},
+			&AccStaticMetrics{},
 		},
 	}
 )

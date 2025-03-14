@@ -60,20 +60,19 @@ type AccPhysicsMetrics struct {
 	AbsVibrations       float32       `json:"AbsVibrations"`
 }
 
-func (metric AccPhysicsMetrics) Game() string {
+func (metric *AccPhysicsMetrics) Game() string {
 	return ASSETTO_CORSA_COMPETIZIONE
 }
 
-func (metric AccPhysicsMetrics) Name() string {
+func (metric *AccPhysicsMetrics) Name() string {
 	return ACC_PHYSICS_METRICS_NAME
 }
 
-func (metric AccPhysicsMetrics) DataPoints() []string {
+func (metric *AccPhysicsMetrics) DataPoints() []string {
 	return getStructFieldNames(metric)
 }
 
-func (metric AccPhysicsMetrics) SetFingerprint(userId, sessionId string, timestamp time.Time) {
+func (metric *AccPhysicsMetrics) AddSessionInfo(userId, sessionId string) {
 	metric.UserId = userId
 	metric.SessionId = sessionId
-	metric.Timestamp = timestamp
 }
