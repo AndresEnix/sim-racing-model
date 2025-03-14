@@ -30,11 +30,11 @@ type AccStaticData struct {
 	AidMechanicalDamage      float32
 	AllowTyreBlankets        float32
 	AidStability             float32
-	AidAutoclutch            int32
+	AidAutoClutch            int32
 	AidAutoBlip              int32
 	HasDRS                   int32      // Not used
 	HasERS                   int32      // Not used
-	HasKERS                  int32      // Not used
+	HasKers                  int32      // Not used
 	KersMaxJ                 float32    // Not used
 	EngineBrakeSettingsCount int32      // Not used
 	ErsPowerControllerCount  int32      // Not used
@@ -84,7 +84,7 @@ func (memory AccStaticData) ToMetrics() Metrics {
 		AidMechanicalDamage: memory.AidMechanicalDamage,
 		AllowTyreBlankets:   memory.AllowTyreBlankets,
 		AidStability:        memory.AidStability,
-		AidAutoclutch:       memory.AidAutoclutch,
+		AidAutoClutch:       memory.AidAutoClutch,
 		AidAutoBlip:         memory.AidAutoBlip,
 		PitWindowStart:      memory.PitWindowStart,
 		PitWindowEnd:        memory.PitWindowEnd,

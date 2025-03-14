@@ -41,11 +41,11 @@ type AccGraphicsData struct {
 	WindDirection            float32
 	IsSetupMenuVisible       int32
 	MainDisplayIndex         int32
-	SecondaryDisplyIndex     int32
-	TC                       int32
-	TCCUT                    int32
+	SecondaryDisplayIndex    int32
+	Tc                       int32
+	TcCut                    int32
 	EngineMap                int32
-	ABS                      int32
+	Abs                      int32
 	FuelXLap                 float32
 	RainLights               int32
 	FlashingLights           int32
@@ -143,11 +143,11 @@ func (memory AccGraphicsData) ToMetrics() Metrics {
 		WindDirection:            memory.WindDirection,
 		IsSetupMenuVisible:       memory.IsSetupMenuVisible,
 		MainDisplayIndex:         memory.MainDisplayIndex,
-		SecondaryDisplyIndex:     memory.SecondaryDisplyIndex,
-		TC:                       memory.TC,
-		TCCUT:                    memory.TCCUT,
+		SecondaryDisplayIndex:    memory.SecondaryDisplayIndex,
+		Tc:                       memory.Tc,
+		TcCut:                    memory.TcCut,
 		EngineMap:                memory.EngineMap,
-		ABS:                      memory.ABS,
+		Abs:                      memory.Abs,
 		FuelXLap:                 memory.FuelXLap,
 		RainLights:               memory.RainLights,
 		FlashingLights:           memory.FlashingLights,

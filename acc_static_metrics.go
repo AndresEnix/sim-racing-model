@@ -19,7 +19,7 @@ type AccStaticMetrics struct {
 	AidMechanicalDamage float32 `json:"AidMechanicalDamage"`
 	AllowTyreBlankets   float32 `json:"AllowTyreBlankets"`
 	AidStability        float32 `json:"AidStability"`
-	AidAutoclutch       int32   `json:"AidAutoclutch"`
+	AidAutoClutch       int32   `json:"AidAutoClutch"`
 	AidAutoBlip         int32   `json:"AidAutoBlip"`
 	PitWindowStart      int32   `json:"PitWindowStart"`
 	PitWindowEnd        int32   `json:"PitWindowEnd"`

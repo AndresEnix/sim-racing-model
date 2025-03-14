@@ -36,11 +36,11 @@ type AccGraphicsMetrics struct {
 	WindDirection            float32        `json:"WindDirection"`
 	IsSetupMenuVisible       int32          `json:"IsSetupMenuVisible"`
 	MainDisplayIndex         int32          `json:"MainDisplayIndex"`
-	SecondaryDisplyIndex     int32          `json:"SecondaryDisplyIndex"`
-	TC                       int32          `json:"TC"`
-	TCCUT                    int32          `json:"TCCUT"`
+	SecondaryDisplayIndex     int32          `json:"SecondaryDisplayIndex"`
+	Tc                       int32          `json:"Tc"`
+	TcCut                    int32          `json:"TcCut"`
 	EngineMap                int32          `json:"EngineMap"`
-	ABS                      int32          `json:"ABS"`
+	Abs                      int32          `json:"Abs"`
 	FuelXLap                 float32        `json:"FuelXLap"`
 	RainLights               int32          `json:"RainLights"`
 	FlashingLights           int32          `json:"FlashingLights"`

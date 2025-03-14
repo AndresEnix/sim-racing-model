@@ -22,8 +22,8 @@ type AccPhysicsMetrics struct {
 	Roll                float32       `json:"Roll"`
 	CarDamage           [5]float32    `json:"CarDamage"`
 	PitLimiterOn        int32         `json:"PitLimiterOn"`
-	ABS                 float32       `json:"ABS"`
-	AutoshifterOn       int32         `json:"AutoshifterOn"`
+	Abs                 float32       `json:"Abs"`
+	AutoShifterOn       int32         `json:"AutoShifterOn"`
 	TurboBoost          float32       `json:"TurboBoost"`
 	AirTemp             float32       `json:"AirTemp"`
 	RoadTemp            float32       `json:"RoadTemp"`

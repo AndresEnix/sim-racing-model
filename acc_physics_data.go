@@ -33,10 +33,10 @@ type AccPhysicsData struct {
 	CarDamage           [5]float32
 	NumberOfTyresOut    int32 // Not used
 	PitLimiterOn        int32
-	ABS                 float32
+	Abs                 float32
 	KersCharge          float32 // Not used
 	KersInput           float32 // Not used
-	AutoshifterOn       int32
+	AutoShifterOn       int32
 	RideHeight          [2]float32 // Not used
 	TurboBoost          float32
 	Ballast             float32 // Not used
@@ -73,7 +73,7 @@ type AccPhysicsData struct {
 	FY                  [4]float32 // Not used
 	SlipRatio           [4]float32
 	SlipAngle           [4]float32
-	TcinAction          int32      // Not used
+	TcInAction          int32      // Not used
 	AbsInAction         int32      // Not used
 	SuspensionDamage    [4]float32 // Not used
 	TyreTemp            [4]float32 // Not used
@@ -127,8 +127,8 @@ func (memory AccPhysicsData) ToMetrics() Metrics {
 		Roll:                memory.Roll,
 		CarDamage:           memory.CarDamage,
 		PitLimiterOn:        memory.PitLimiterOn,
-		ABS:                 memory.ABS,
-		AutoshifterOn:       memory.AutoshifterOn,
+		Abs:                 memory.Abs,
+		AutoShifterOn:       memory.AutoShifterOn,
 		TurboBoost:          memory.TurboBoost,
 		AirTemp:             memory.AirTemp,
 		RoadTemp:            memory.RoadTemp,
