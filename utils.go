@@ -6,7 +6,7 @@ import (
 	"unicode/utf16"
 )
 
-// Method exposed to the module users
+// Exposed methods
 func GameMemoryFiles(gameId string) []SharedMemoryData {
 	return gameMemoryMapping[strings.ToLower(gameId)]
 }
