@@ -69,7 +69,7 @@ func (metric *AccPhysicsMetrics) Name() string {
 }
 
 func (metric *AccPhysicsMetrics) DataPoints() []string {
-	return getStructFieldNames(metric)
+	return getStructFieldNames(*metric)
 }
 
 func (metric *AccPhysicsMetrics) AddSessionInfo(userId, sessionId string) {

@@ -104,7 +104,7 @@ func (metric *AccGraphicsMetrics) Name() string {
 }
 
 func (metric *AccGraphicsMetrics) DataPoints() []string {
-	return getStructFieldNames(metric)
+	return getStructFieldNames(*metric)
 }
 
 func (metric *AccGraphicsMetrics) AddSessionInfo(userId, sessionId string) {

@@ -43,7 +43,7 @@ func (metric *AccStaticMetrics) Name() string {
 }
 
 func (metric *AccStaticMetrics) DataPoints() []string {
-	return getStructFieldNames(metric)
+	return getStructFieldNames(*metric)
 }
 
 func (metric *AccStaticMetrics) AddSessionInfo(userId, sessionId string) {
