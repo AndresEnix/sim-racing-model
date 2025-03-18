@@ -1,6 +1,8 @@
 package model
 
 import (
+	"fmt"
+	"hash/fnv"
 	"time"
 	"unsafe"
 )
@@ -61,8 +63,26 @@ func (memory *AccStaticData) Path() string {
 	return ACC_FILES_PREFIX + memory.Name()
 }
 
-func (memory *AccStaticData) CreateMetric(pointer uintptr) Metrics {
-	memory = (*AccStaticData)(unsafe.Pointer(pointer))
+func (memory *AccStaticData) Hash() uint32 {
+	h := fnv.New32a()
+	h.Write([]byte(uint16ToString(memory.SmVersion[:])))
+	h.Write([]byte(uint16ToString(memory.AcVersion[:])))
+	h.Write([]byte(fmt.Sprintf("%d", memory.NumberOfSessions)))
+	h.Write([]byte(fmt.Sprintf("%d", memory.NumCars)))
+	h.Write([]byte(uint16ToString(memory.CarModel[:])))
+	h.Write([]byte(uint16ToString(memory.Track[:])))
+	h.Write([]byte(uint16ToString(memory.PlayerName[:])))
+	h.Write([]byte(uint16ToString(memory.PlayerSurname[:])))
+	h.Write([]byte(uint16ToString(memory.PlayerNick[:])))
+	return h.Sum32()
+}
+
+func (memory *AccStaticData) MapValues(pointer uintptr) {
+	newValue := (*AccStaticData)(unsafe.Pointer(pointer))
+	*memory = *newValue
+}
+
+func (memory *AccStaticData) CreateMetric() Metrics {
 	return &AccStaticMetrics{
 		Timestamp:           time.Now().UTC(),
 		SmVersion:           uint16ToString(memory.SmVersion[:]),

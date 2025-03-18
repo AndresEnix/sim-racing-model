@@ -1,6 +1,8 @@
 package model
 
 import (
+	"fmt"
+	"hash/fnv"
 	"time"
 	"unsafe"
 )
@@ -103,8 +105,18 @@ func (memory *AccGraphicsData) Path() string {
 	return ACC_FILES_PREFIX + memory.Name()
 }
 
-func (memory *AccGraphicsData) CreateMetric(pointer uintptr) Metrics {
-	memory = (*AccGraphicsData)(unsafe.Pointer(pointer))
+func (memory *AccGraphicsData) Hash() uint32 {
+	h := fnv.New32a()
+	h.Write([]byte(fmt.Sprintf("%d", memory.PacketId)))
+	return h.Sum32()
+}
+
+func (memory *AccGraphicsData) MapValues(pointer uintptr) {
+	newValue := (*AccGraphicsData)(unsafe.Pointer(pointer))
+	*memory = *newValue
+}
+
+func (memory *AccGraphicsData) CreateMetric() Metrics {
 	return &AccGraphicsMetrics{
 		Timestamp:                time.Now().UTC(),
 		PacketId:                 memory.PacketId,

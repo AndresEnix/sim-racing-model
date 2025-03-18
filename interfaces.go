@@ -3,7 +3,9 @@ package model
 type SharedMemoryData interface {
 	Name() string
 	Path() string
-	CreateMetric(pointer uintptr) Metrics
+	MapValues(pointer uintptr)
+	CreateMetric() Metrics
+	Hash() uint32
 }
 
 type Metrics interface {
