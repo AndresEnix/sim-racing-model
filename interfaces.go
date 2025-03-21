@@ -13,4 +13,5 @@ type Metrics interface {
 	Name() string
 	DataPoints() []string
 	AddSessionInfo(userId, sessionId string)
+	New() Metrics
 }

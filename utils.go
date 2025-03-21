@@ -48,3 +48,45 @@ func getStructFieldNames(instance any) []string {
 	}
 	return fieldNames
 }
+
+func floatArray_60_3_ToSlice(arr [60][3]float32) [][]float32 {
+	result := make([][]float32, len(arr))
+	for i := range arr {
+		result[i] = arr[i][:]
+	}
+	return result
+}
+
+func floatArray_4_3_ToSlice(arr [4][3]float32) [][]float32 {
+	result := make([][]float32, len(arr))
+	for i := range arr {
+		result[i] = arr[i][:]
+	}
+	return result
+}
+
+func twoDimensionSliceFloat32To64(input [][]float32) [][]float64 {
+	output := make([][]float64, len(input)) // Create outer slice
+
+	for i, row := range input {
+		output[i] = oneDimensionSliceFloat32To64(row)
+	}
+
+	return output
+}
+
+func oneDimensionSliceFloat32To64(input []float32) []float64 {
+	output := make([]float64, len(input)) // Create a new slice of float64
+	for i, val := range input {
+		output[i] = float64(val)
+	}
+	return output
+}
+
+func oneDimensionSliceInt32To64(input []int32) []int64 {
+	output := make([]int64, len(input)) // Create a new slice of float64
+	for i, val := range input {
+		output[i] = int64(val)
+	}
+	return output
+}

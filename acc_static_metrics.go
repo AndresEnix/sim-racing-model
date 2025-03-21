@@ -9,27 +9,27 @@ type AccStaticMetrics struct {
 	Timestamp           time.Time `json:"Timestamp"`
 	SmVersion           string    `json:"SmVersion"`
 	AcVersion           string    `json:"AcVersion"`
-	NumberOfSessions    int32     `json:"NumberOfSessions"`
-	NumCars             int32     `json:"NumCars"`
+	NumberOfSessions    int64     `json:"NumberOfSessions"`
+	NumCars             int64     `json:"NumCars"`
 	CarModel            string    `json:"CarModel"`
 	Track               string    `json:"Track"`
 	PlayerName          string    `json:"PlayerName"`
 	PlayerSurname       string    `json:"PlayerSurname"`
 	PlayerNick          string    `json:"PlayerNick"`
-	SectorCount         int32     `json:"SectorCount"`
-	MaxRpm              int32     `json:"MaxRpm"`
-	MaxFuel             float32   `json:"MaxFuel"`
-	PenaltiesEnabled    int32     `json:"PenaltiesEnabled"`
-	AidFuelRate         float32   `json:"AidFuelRate"`
-	AidTireRate         float32   `json:"AidTireRate"`
-	AidMechanicalDamage float32   `json:"AidMechanicalDamage"`
-	AllowTyreBlankets   float32   `json:"AllowTyreBlankets"`
-	AidStability        float32   `json:"AidStability"`
-	AidAutoClutch       int32     `json:"AidAutoClutch"`
-	AidAutoBlip         int32     `json:"AidAutoBlip"`
-	PitWindowStart      int32     `json:"PitWindowStart"`
-	PitWindowEnd        int32     `json:"PitWindowEnd"`
-	IsOnline            int32     `json:"IsOnline"`
+	SectorCount         int64     `json:"SectorCount"`
+	MaxRpm              int64     `json:"MaxRpm"`
+	MaxFuel             float64   `json:"MaxFuel"`
+	PenaltiesEnabled    int64     `json:"PenaltiesEnabled"`
+	AidFuelRate         float64   `json:"AidFuelRate"`
+	AidTireRate         float64   `json:"AidTireRate"`
+	AidMechanicalDamage float64   `json:"AidMechanicalDamage"`
+	AllowTyreBlankets   float64   `json:"AllowTyreBlankets"`
+	AidStability        float64   `json:"AidStability"`
+	AidAutoClutch       int64     `json:"AidAutoClutch"`
+	AidAutoBlip         int64     `json:"AidAutoBlip"`
+	PitWindowStart      int64     `json:"PitWindowStart"`
+	PitWindowEnd        int64     `json:"PitWindowEnd"`
+	IsOnline            int64     `json:"IsOnline"`
 	DryTyresName        string    `json:"DryTyresName"`
 	WetTyresName        string    `json:"WetTyresName"`
 }
@@ -49,4 +49,8 @@ func (metric *AccStaticMetrics) DataPoints() []string {
 func (metric *AccStaticMetrics) AddSessionInfo(userId, sessionId string) {
 	metric.UserId = userId
 	metric.SessionId = sessionId
+}
+
+func (metric *AccStaticMetrics) New() Metrics {
+	return &AccStaticMetrics{}
 }
