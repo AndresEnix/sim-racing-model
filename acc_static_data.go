@@ -63,6 +63,10 @@ func (memory *AccStaticData) Path() string {
 	return ACC_FILES_PREFIX + memory.Name()
 }
 
+func (memory *AccStaticData) ReadFrequency() time.Duration {
+	return time.Duration(getUint64Env(memory.Name()+READ_FREQUENCY_SUFFIX, ACC_STATIC_DEFAULT_READ_FREQUENCY)) * time.Millisecond
+}
+
 func (memory *AccStaticData) Hash() uint32 {
 	h := fnv.New32a()
 	h.Write([]byte(uint16ToString(memory.SmVersion[:])))

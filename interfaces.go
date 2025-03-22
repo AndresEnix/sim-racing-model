@@ -1,8 +1,11 @@
 package model
 
+import "time"
+
 type SharedMemoryData interface {
 	Name() string
 	Path() string
+	ReadFrequency() time.Duration
 	MapValues(pointer uintptr)
 	CreateMetric() Metrics
 	Hash() uint32

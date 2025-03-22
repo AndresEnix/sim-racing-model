@@ -1,7 +1,9 @@
 package model
 
 import (
+	"os"
 	"reflect"
+	"strconv"
 	"strings"
 	"unicode/utf16"
 )
@@ -24,6 +26,20 @@ func GamesUsingSharedMemory() []string {
 }
 
 // Internal module methods
+func getUint64Env(key string, defaultValue uint64) uint64 {
+	valueStr := os.Getenv(key)
+	if valueStr == "" {
+		return defaultValue
+	}
+
+	value, err := strconv.ParseUint(valueStr, 10, 64)
+	if err != nil {
+		return defaultValue
+	}
+
+	return value
+}
+
 func uint16ToString(data []uint16) string {
 	cleanData := trimTrailingNulls(data)
 	return string(utf16.Decode(cleanData))

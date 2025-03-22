@@ -105,6 +105,10 @@ func (memory *AccGraphicsData) Path() string {
 	return ACC_FILES_PREFIX + memory.Name()
 }
 
+func (memory *AccGraphicsData) ReadFrequency() time.Duration {
+	return time.Duration(getUint64Env(memory.Name()+READ_FREQUENCY_SUFFIX, ACC_GRAPHICS_DEFAULT_READ_FREQUENCY)) * time.Millisecond
+}
+
 func (memory *AccGraphicsData) Hash() uint32 {
 	h := fnv.New32a()
 	h.Write([]byte(fmt.Sprintf("%d", memory.PacketId)))
