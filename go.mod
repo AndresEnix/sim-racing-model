@@ -1,3 +1,3 @@
-module github.com/AndresEnix/simracing-telemetry-model
+module github.com/AndresEnix/sim-racing-model
 
 go 1.23.0
