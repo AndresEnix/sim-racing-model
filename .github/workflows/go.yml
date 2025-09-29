@@ -10,7 +10,9 @@ on:
 
 jobs:
   release:
-    name: lint
+    name: build, test and release
+    permissions:
+      issues: write
     strategy:
       matrix:
         go: [1.24.0]
