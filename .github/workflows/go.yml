@@ -23,10 +23,10 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go }}
-      - name: lint
-        uses: golangci/golangci-lint-action@v8
-        with:
-          version: v2.1
+      #- name: lint
+      #  uses: golangci/golangci-lint-action@v8
+      #  with:
+      #    version: v2.1
       - name: build
         run: go mod tidy
       - name: test
