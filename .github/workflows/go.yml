@@ -13,6 +13,7 @@ jobs:
     name: build, test and release
     permissions:
       issues: write
+      contents: write
     strategy:
       matrix:
         go: [1.24.0]
