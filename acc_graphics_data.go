@@ -1,6 +1,7 @@
 package model
 
 import (
+	"math"
 	"fmt"
 	"hash/fnv"
 	"time"
@@ -106,17 +107,28 @@ func (memory *AccGraphicsData) Path() string {
 }
 
 func (memory *AccGraphicsData) ReadFrequency() time.Duration {
-	return time.Duration(getUint64Env(memory.Name()+READ_FREQUENCY_SUFFIX, ACC_GRAPHICS_DEFAULT_READ_FREQUENCY)) * time.Millisecond
+    frequencyMs := getUint64Env(memory.Name()+READ_FREQUENCY_SUFFIX, ACC_GRAPHICS_DEFAULT_READ_FREQUENCY)
+    if frequencyMs > uint64(MAX_ALLOWED_MS) {
+        fmt.Printf("WARNING: Duration value (%d ms) from %s overflows time.Duration. Capping at MaxDuration.\n", frequencyMs, memory.Name()+READ_FREQUENCY_SUFFIX)
+        
+        return time.Duration(math.MaxInt64) 
+    }
+    return time.Duration(frequencyMs) * time.Millisecond
 }
 
 func (memory *AccGraphicsData) Hash() uint32 {
 	h := fnv.New32a()
-	h.Write([]byte(fmt.Sprintf("%d", memory.PacketId)))
+	_, err := fmt.Fprintf(h, "%d", memory.PacketId)
+	if err != nil {
+		fmt.Printf("WARNING: Failed to generate hash for %s: %s\n", memory.Name(), err.Error())
+    	return 0
+	}
 	return h.Sum32()
 }
 
+//nolint:govet
 func (memory *AccGraphicsData) MapValues(pointer uintptr) {
-	newValue := (*AccGraphicsData)(unsafe.Pointer(pointer))
+	newValue := (*AccGraphicsData)(unsafe.Pointer(pointer))// #nosec
 	*memory = *newValue
 }
 

@@ -1,8 +1,14 @@
 package model
 
+import (
+	"math"
+	"time"
+)
+
 // General constants
 const (
 	READ_FREQUENCY_SUFFIX      = "_read_frequency"
+	MAX_ALLOWED_MS = math.MaxInt64 / int64(time.Millisecond)
 )
 
 // Game constants

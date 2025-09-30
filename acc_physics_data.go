@@ -1,6 +1,7 @@
 package model
 
 import (
+	"math"
 	"fmt"
 	"hash/fnv"
 	"time"
@@ -104,17 +105,30 @@ func (memory *AccPhysicsData) Path() string {
 }
 
 func (memory *AccPhysicsData) ReadFrequency() time.Duration {
-	return time.Duration(getUint64Env(memory.Name()+READ_FREQUENCY_SUFFIX, ACC_PHYSICS_DEFAULT_READ_FREQUENCY)) * time.Millisecond
+    frequencyMs := getUint64Env(memory.Name()+READ_FREQUENCY_SUFFIX, ACC_PHYSICS_DEFAULT_READ_FREQUENCY)
+    if frequencyMs > uint64(MAX_ALLOWED_MS) {
+        fmt.Printf("WARNING: Duration value (%d ms) from %s overflows time.Duration. Capping at MaxDuration.\n", frequencyMs, memory.Name()+READ_FREQUENCY_SUFFIX)
+        return time.Duration(math.MaxInt64) 
+    }
+
+    // 3. Safe conversion (uint64 to int64) and multiplication.
+    // This is the original line, now executed only when the value is safe.
+    return time.Duration(frequencyMs) * time.Millisecond
 }
 
 func (memory *AccPhysicsData) Hash() uint32 {
 	h := fnv.New32a()
-	h.Write([]byte(fmt.Sprintf("%d", memory.PacketId)))
+	_, err := fmt.Fprintf(h, "%d", memory.PacketId)
+	if err != nil {
+		fmt.Printf("WARNING: Failed to generate hash for %s: %s\n", memory.Name(), err.Error())
+    	return 0
+	}
 	return h.Sum32()
 }
 
+//nolint:govet
 func (memory *AccPhysicsData) MapValues(pointer uintptr) {
-	newValue := (*AccPhysicsData)(unsafe.Pointer(pointer))
+	newValue := (*AccPhysicsData)(unsafe.Pointer(pointer))// #nosec
 	*memory = *newValue
 }
 

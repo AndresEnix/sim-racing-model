@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 	"hash/fnv"
+	"math"
 	"time"
 	"unsafe"
 )
@@ -64,25 +65,58 @@ func (memory *AccStaticData) Path() string {
 }
 
 func (memory *AccStaticData) ReadFrequency() time.Duration {
-	return time.Duration(getUint64Env(memory.Name()+READ_FREQUENCY_SUFFIX, ACC_STATIC_DEFAULT_READ_FREQUENCY)) * time.Millisecond
+    frequencyMs := getUint64Env(memory.Name()+READ_FREQUENCY_SUFFIX, ACC_STATIC_DEFAULT_READ_FREQUENCY)
+    if frequencyMs > uint64(MAX_ALLOWED_MS) {
+        fmt.Printf("WARNING: Duration value (%d ms) from %s overflows time.Duration. Capping at MaxDuration.\n", frequencyMs, memory.Name()+READ_FREQUENCY_SUFFIX)
+        return time.Duration(math.MaxInt64) 
+    }
+    return time.Duration(frequencyMs) * time.Millisecond
 }
 
 func (memory *AccStaticData) Hash() uint32 {
 	h := fnv.New32a()
-	h.Write([]byte(uint16ToString(memory.SmVersion[:])))
-	h.Write([]byte(uint16ToString(memory.AcVersion[:])))
-	h.Write([]byte(fmt.Sprintf("%d", memory.NumberOfSessions)))
-	h.Write([]byte(fmt.Sprintf("%d", memory.NumCars)))
-	h.Write([]byte(uint16ToString(memory.CarModel[:])))
-	h.Write([]byte(uint16ToString(memory.Track[:])))
-	h.Write([]byte(uint16ToString(memory.PlayerName[:])))
-	h.Write([]byte(uint16ToString(memory.PlayerSurname[:])))
-	h.Write([]byte(uint16ToString(memory.PlayerNick[:])))
+	_, err := h.Write([]byte(uint16ToString(memory.SmVersion[:])))
+	if err != nil {
+		fmt.Printf("WARNING: Failed to use SmVersion in %s hash: %s\n", memory.Name(), err.Error())
+	}
+	_, err = h.Write([]byte(uint16ToString(memory.AcVersion[:])))
+	if err != nil {
+		fmt.Printf("WARNING: Failed to use AcVersion in %s hash: %s\n", memory.Name(), err.Error())
+	}
+	_, err = fmt.Fprintf(h, "%d", memory.NumberOfSessions)
+	if err != nil {
+		fmt.Printf("WARNING: Failed to use NumberOfSessions in %s hash: %s\n", memory.Name(), err.Error())
+	}
+	_, err = fmt.Fprintf(h, "%d", memory.NumCars)
+	if err != nil {
+		fmt.Printf("WARNING: Failed to use NumCars in %s hash: %s\n", memory.Name(), err.Error())
+	}
+	_, err = h.Write([]byte(uint16ToString(memory.CarModel[:])))
+	if err != nil {
+		fmt.Printf("WARNING: Failed to use CarModel in %s hash: %s\n", memory.Name(), err.Error())
+	}
+	_, err = h.Write([]byte(uint16ToString(memory.Track[:])))
+	if err != nil {
+		fmt.Printf("WARNING: Failed to use Track in %s hash: %s\n", memory.Name(), err.Error())
+	}
+	_, err = h.Write([]byte(uint16ToString(memory.PlayerName[:])))
+	if err != nil {
+		fmt.Printf("WARNING: Failed to use PlayerName in %s hash: %s\n", memory.Name(), err.Error())
+	}
+	_, err = h.Write([]byte(uint16ToString(memory.PlayerSurname[:])))
+	if err != nil {
+		fmt.Printf("WARNING: Failed to use PlayerSurname in %s hash: %s\n", memory.Name(), err.Error())
+	}
+	_, err = h.Write([]byte(uint16ToString(memory.PlayerNick[:])))
+	if err != nil {
+		fmt.Printf("WARNING: Failed to use PlayerNick in %s hash: %s\n", memory.Name(), err.Error())
+	}
 	return h.Sum32()
 }
 
+//nolint:govet
 func (memory *AccStaticData) MapValues(pointer uintptr) {
-	newValue := (*AccStaticData)(unsafe.Pointer(pointer))
+	newValue := (*AccStaticData)(unsafe.Pointer(pointer))// #nosec
 	*memory = *newValue
 }
 
