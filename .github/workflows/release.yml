@@ -56,7 +56,7 @@ jobs:
           ASSET_FILE="${{ steps.vars.outputs.bin_name }}_${{ steps.vars.outputs.goos }}_${{ steps.vars.outputs.goarch }}.${{ steps.vars.outputs.ext }}"
           
           # The `runner_os` is used here to determine the compression utility
-          if [ "${{ matrix.runner_os }}" == "windows-latest" ]; then
+          if ( "${{ matrix.runner_os }}" == "windows-latest" ); then
             # Windows: use 7z to create a zip file (usually pre-installed)
             7z a "$ASSET_FILE" "${{ steps.vars.outputs.bin_name }}.exe"
           else
