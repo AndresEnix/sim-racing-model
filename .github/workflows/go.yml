@@ -38,9 +38,9 @@ jobs:
       #  run: |
       #    go install github.com/go-semantic-release/semantic-release/v2/cmd/semantic-release@v2.31.0
       #    echo "$(go env GOPATH)/bin" >> $GITHUB_PATH # Add GOPATH/bin to the PATH
-      #  shell: bash
+      #  
       - name: release
         uses: go-semantic-release/action@v1
+        shell: bash
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-        shell: bash
