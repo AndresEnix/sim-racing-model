@@ -9,7 +9,8 @@ jobs:
   tagging:
     runs-on: ubuntu-latest
     permissions:
-      contents: write 
+      contents: write
+      actions: write
     
     outputs:
       new_tag: ${{ steps.tagger.outputs.new_tag }}
