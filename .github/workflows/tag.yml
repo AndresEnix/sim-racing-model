@@ -28,7 +28,7 @@ jobs:
           
       - name: Log New Tag
         if: steps.tagger.outputs.new_tag != ''
-        run: echo "Generated Tag: ${{ steps.tagger.outputs.new_tag }}"
+        run: echo "Generated Tag: ${{ steps.tagger.outputs.new_tag }}
         
       - name: Trigger Release Workflow
         if: steps.tagger.outputs.new_tag != ''
