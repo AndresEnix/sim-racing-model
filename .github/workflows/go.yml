@@ -34,6 +34,8 @@ jobs:
         run: go mod tidy
       - name: test
         run: go test -v ./...
+      - name: Install go-semantic-release
+        run: go install github.com/go-semantic-release/go-semantic-release/cmd/go-semantic-release@latest
       - name: release
         uses: go-semantic-release/action@v1
         with:
