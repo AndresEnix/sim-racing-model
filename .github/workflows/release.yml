@@ -33,12 +33,7 @@ jobs:
         with:
           go-version: 'stable'
       - name: Install Go dependencies
-        run: go mod tidy
-      - name: Run tests
-        run: go test -v ./...
-      - name: Build Go project
-        run: go build -v ./...
-      - name: Prepare Variables
+        run: ./build.sh
         id: vars
         run: |
           BIN_NAME="${{ github.event.repository.name }}"
