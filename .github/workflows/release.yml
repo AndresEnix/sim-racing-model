@@ -79,8 +79,8 @@ jobs:
         if: runner.os == 'windows-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.package.outputs.asset_file }}
-          path: ${{ steps.package.outputs.asset_file }}
+          name: ${{ steps.package-windows.outputs.asset_file }}
+          path: ${{ steps.package-windows.outputs.asset_file }}
 
   create_release:
     name: Create GitHub Release
