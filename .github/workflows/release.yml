@@ -34,7 +34,11 @@ jobs:
           go-version: 'stable'
       - id: govulncheck
         uses: golang/govulncheck-action@v1
-      - name: Build and Set Variables
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v8
+        with:
+          version: v2.1
+      - name: Test, Scan and Set Variables
         id: vars
         run: |
           ./build.sh
