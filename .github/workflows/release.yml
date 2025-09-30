@@ -61,7 +61,7 @@ jobs:
           echo "asset_file=$ASSET_FILE" >> $GITHUB_OUTPUT
       - name: Package Binary (windows)
         if: runner.os == 'windows-latest'
-        id: package
+        id: package-windows
         run: |
           ASSET_FILE="${{ steps.vars.outputs.bin_name }}_${{ steps.vars.outputs.goos }}_${{ steps.vars.outputs.goarch }}.${{ steps.vars.outputs.ext }}"
           7z a "$ASSET_FILE" "${{ steps.vars.outputs.bin_name }}.exe"
