@@ -1,10 +1,13 @@
 package model
 
+
 import (
 	"reflect"
 	"time"
 )
 
+
+// AccPhysicsMetrics is the name of the AccPhysics metrics.
 type AccPhysicsMetrics struct {
 	ID                  string      `json:"id"`
 	UserID              string      `json:"userId"`
@@ -63,31 +66,8 @@ type AccPhysicsMetrics struct {
 	AbsVibrations       float64     `json:"absVibrations"`
 }
 
-func (metric *AccPhysicsMetrics) Game() string {
-	return AssettoCorsaCompetizione
-}
 
-func (metric *AccPhysicsMetrics) Name() string {
-	return AccPhysicsMetricsName
-}
-
-func (metric *AccPhysicsMetrics) DataPoints() []string {
-	v := reflect.ValueOf(metric)
-	t := v.Type()
-
-	fieldNames := make([]string, 0, v.NumField())
-	for i := range v.NumField() {
-		fieldNames = append(fieldNames, t.Field(i).Name)
-	}
-
-	return fieldNames
-}
-
-func (metric *AccPhysicsMetrics) AddSessionInfo(userID, sessionID string) {
-	metric.UserID = userID
-	metric.SessionID = sessionID
-}
-
+// NewAccPhysicsMetrics creates a new AccPhysicsMetrics struct with default values.
 func NewAccPhysicsMetrics() *AccPhysicsMetrics {
 	return &AccPhysicsMetrics{
 		ID:                  "",
@@ -146,4 +126,37 @@ func NewAccPhysicsMetrics() *AccPhysicsMetrics {
 		GVibrations:         0.0,
 		AbsVibrations:       0.0,
 	}
+}
+
+
+// Game returns the name of the game for the AccPhysicsMetrics metric.
+func (metric *AccPhysicsMetrics) Game() string {
+	return AssettoCorsaCompetizione
+}
+
+
+// Name returns the name of the AccPhysicsMetrics metric.
+func (metric *AccPhysicsMetrics) Name() string {
+	return AccPhysicsMetricsName
+}
+
+
+// DataPoints returns the field names of the AccPhysicsMetrics struct.
+func (metric *AccPhysicsMetrics) DataPoints() []string {
+	v := reflect.ValueOf(metric)
+	t := v.Type()
+
+	fieldNames := make([]string, 0, v.NumField())
+	for i := range v.NumField() {
+		fieldNames = append(fieldNames, t.Field(i).Name)
+	}
+
+	return fieldNames
+}
+
+
+// AddSessionInfo adds the user ID and session ID to the metric.
+func (metric *AccPhysicsMetrics) AddSessionInfo(userID, sessionID string) {
+	metric.UserID = userID
+	metric.SessionID = sessionID
 }

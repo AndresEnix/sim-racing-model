@@ -1,5 +1,6 @@
 package model
 
+
 import (
 	"fmt"
 	"hash/fnv"
@@ -9,6 +10,8 @@ import (
 	"unsafe"
 )
 
+
+// AccPhysicsData represents the structure of the ACC graphics data shared memory.
 type AccPhysicsData struct {
 	PacketID            int32
 	Gas                 float32
@@ -97,106 +100,9 @@ type AccPhysicsData struct {
 	AbsVibrations       float32
 }
 
-func (memory *AccPhysicsData) Name() string {
-	return AccPhysicsFileName
-}
-
-func (memory *AccPhysicsData) Path() string {
-	return AccFilesPrefix + memory.Name()
-}
-
-func (memory *AccPhysicsData) ReadFrequency() time.Duration {
-	frequencyMs := getUint64Env(memory.Name()+ReadFrequencySuffix, AccPhysicsDefaultReadFrequency)
-	if frequencyMs > uint64(MaxAllowedMs) {
-		log.Printf(
-			"WARNING: Duration value (%d ms) from %s overflows time.Duration. Capping at MaxDuration.\n",
-			frequencyMs,
-			memory.Name()+ReadFrequencySuffix,
-		)
-
-		return time.Duration(math.MaxInt64)
-	}
-
-	return time.Duration(frequencyMs) * time.Millisecond
-}
-
-func (memory *AccPhysicsData) Hash() uint32 {
-	hasher := fnv.New32a()
-	if _, err := fmt.Fprintf(hasher, "%d", memory.PacketID); err != nil {
-		log.Printf("WARNING: Failed to generate hash for %s: %s\n", memory.Name(), err.Error())
-
-		return 0
-	}
-
-	return hasher.Sum32()
-}
-
-func (memory *AccPhysicsData) MapValues(pointer uintptr) {
-	newValue := (*AccPhysicsData)(unsafe.Pointer(pointer))
-	*memory = *newValue
-}
-
-func (memory *AccPhysicsData) CreateMetric() *AccPhysicsMetrics {
-	return &AccPhysicsMetrics{
-		ID:                  "",
-		UserID:              "",
-		SessionID:           "",
-		Timestamp:           time.Now().UTC(),
-		PacketID:            int64(memory.PacketID),
-		Gas:                 float64(memory.Gas),
-		Brake:               float64(memory.Brake),
-		Fuel:                float64(memory.Fuel),
-		Gear:                int64(memory.Gear),
-		RPM:                 int64(memory.RPM),
-		SteerAngle:          float64(memory.SteerAngle),
-		SpeedKmh:            float64(memory.SpeedKmh),
-		Velocity:            oneDimensionSliceFloat32To64(memory.Velocity[:]),
-		AccG:                oneDimensionSliceFloat32To64(memory.AccG[:]),
-		WheelSlip:           oneDimensionSliceFloat32To64(memory.WheelSlip[:]),
-		WheelPressure:       oneDimensionSliceFloat32To64(memory.WheelPressure[:]),
-		WheelAngularSpeed:   oneDimensionSliceFloat32To64(memory.WheelAngularSpeed[:]),
-		TyreCoreTemperature: oneDimensionSliceFloat32To64(memory.TyreCoreTemperature[:]),
-		SuspensionTravel:    oneDimensionSliceFloat32To64(memory.SuspensionTravel[:]),
-		TC:                  float64(memory.TC),
-		Heading:             float64(memory.Heading),
-		Pitch:               float64(memory.Pitch),
-		Roll:                float64(memory.Roll),
-		CarDamage:           oneDimensionSliceFloat32To64(memory.CarDamage[:]),
-		PitLimiterOn:        int64(memory.PitLimiterOn),
-		Abs:                 float64(memory.Abs),
-		AutoShifterOn:       int64(memory.AutoShifterOn),
-		TurboBoost:          float64(memory.TurboBoost),
-		AirTemp:             float64(memory.AirTemp),
-		RoadTemp:            float64(memory.RoadTemp),
-		LocalAngularVel:     oneDimensionSliceFloat32To64(memory.LocalAngularVel[:]),
-		FinalFF:             float64(memory.FinalFF),
-		BrakeTemp:           oneDimensionSliceFloat32To64(memory.BrakeTemp[:]),
-		Clutch:              float64(memory.Clutch),
-		IsAIControlled:      int64(memory.IsAIControlled),
-		TyreContactPoint:    twoDimensionSliceFloat32To64(floatArray4_3ToSlice(memory.TyreContactPoint)),
-		TyreContactNormal:   twoDimensionSliceFloat32To64(floatArray4_3ToSlice(memory.TyreContactNormal)),
-		TyreContactHeading:  twoDimensionSliceFloat32To64(floatArray4_3ToSlice(memory.TyreContactHeading)),
-		BrakeBias:           float64(memory.BrakeBias),
-		LocalVelocity:       oneDimensionSliceFloat32To64(memory.LocalVelocity[:]),
-		SlipRatio:           oneDimensionSliceFloat32To64(memory.SlipRatio[:]),
-		SlipAngle:           oneDimensionSliceFloat32To64(memory.SlipAngle[:]),
-		WaterTemp:           float64(memory.WaterTemp),
-		BrakePressure:       oneDimensionSliceFloat32To64(memory.BrakePressure[:]),
-		FrontBrakeCompound:  int64(memory.FrontBrakeCompound),
-		RearBrakeCompound:   int64(memory.RearBrakeCompound),
-		PadLife:             oneDimensionSliceFloat32To64(memory.PadLife[:]),
-		DiscLife:            oneDimensionSliceFloat32To64(memory.DiscLife[:]),
-		IgnitionOn:          int64(memory.IgnitionOn),
-		StarterEngineOn:     int64(memory.StarterEngineOn),
-		IsEngineRunning:     int64(memory.IsEngineRunning),
-		KerbVibration:       float64(memory.KerbVibration),
-		SlipVibrations:      float64(memory.SlipVibrations),
-		GVibrations:         float64(memory.GVibrations),
-		AbsVibrations:       float64(memory.AbsVibrations),
-	}
-}
 
 //nolint:funlen
+// NewAccPhysicsData creates a new instance of AccPhysicsData with default values.
 func NewAccPhysicsData() *AccPhysicsData {
 	return &AccPhysicsData{
 		PacketID:            0,
@@ -284,5 +190,119 @@ func NewAccPhysicsData() *AccPhysicsData {
 		SlipVibrations:      0.0,
 		GVibrations:         0.0,
 		AbsVibrations:       0.0,
+	}
+}
+
+
+// Name returns the name of the shared memory file for ACC physics data.
+func (memory *AccPhysicsData) Name() string {
+	return AccPhysicsFileName
+}
+
+
+// Path returns the full path to the shared memory file for ACC physics data.
+func (memory *AccPhysicsData) Path() string {
+	return AccFilesPrefix + memory.Name()
+}
+
+
+// ReadFrequency returns the frequency at which the ACC physics data should be read.
+func (memory *AccPhysicsData) ReadFrequency() time.Duration {
+	frequencyMs := getUint64Env(memory.Name()+ReadFrequencySuffix, AccPhysicsDefaultReadFrequency)
+	if frequencyMs > uint64(MaxAllowedMs) {
+		log.Printf(
+			"WARNING: Duration value (%d ms) from %s overflows time.Duration. Capping at MaxDuration.\n",
+			frequencyMs,
+			memory.Name()+ReadFrequencySuffix,
+		)
+
+		return time.Duration(math.MaxInt64)
+	}
+
+	return time.Duration(frequencyMs) * time.Millisecond
+}
+
+
+// Hash generates a hash based on the PacketID of the ACC physics data.
+func (memory *AccPhysicsData) Hash() uint32 {
+	hasher := fnv.New32a()
+	
+	_, err := fmt.Fprintf(hasher, "%d", memory.PacketID)
+	if err != nil {
+		log.Printf("WARNING: Failed to generate hash for %s: %s\n", memory.Name(), err.Error())
+
+		return 0
+	}
+
+	return hasher.Sum32()
+}
+
+
+//nolint:gosec
+// MapValues maps the values from a memory pointer to the AccPhysicsData struct.
+func (memory *AccPhysicsData) MapValues(pointer uintptr) {
+	newValue := (*AccPhysicsData)(unsafe.Pointer(pointer))//nolint:govet
+	*memory = *newValue
+}
+
+
+// CreateMetric creates a new AccPhysicsMetrics instance from the current AccPhysicsData.
+func (memory *AccPhysicsData) CreateMetric() *AccPhysicsMetrics {
+	return &AccPhysicsMetrics{
+		ID:                  "",
+		UserID:              "",
+		SessionID:           "",
+		Timestamp:           time.Now().UTC(),
+		PacketID:            int64(memory.PacketID),
+		Gas:                 float64(memory.Gas),
+		Brake:               float64(memory.Brake),
+		Fuel:                float64(memory.Fuel),
+		Gear:                int64(memory.Gear),
+		RPM:                 int64(memory.RPM),
+		SteerAngle:          float64(memory.SteerAngle),
+		SpeedKmh:            float64(memory.SpeedKmh),
+		Velocity:            oneDimensionSliceFloat32To64(memory.Velocity[:]),
+		AccG:                oneDimensionSliceFloat32To64(memory.AccG[:]),
+		WheelSlip:           oneDimensionSliceFloat32To64(memory.WheelSlip[:]),
+		WheelPressure:       oneDimensionSliceFloat32To64(memory.WheelPressure[:]),
+		WheelAngularSpeed:   oneDimensionSliceFloat32To64(memory.WheelAngularSpeed[:]),
+		TyreCoreTemperature: oneDimensionSliceFloat32To64(memory.TyreCoreTemperature[:]),
+		SuspensionTravel:    oneDimensionSliceFloat32To64(memory.SuspensionTravel[:]),
+		TC:                  float64(memory.TC),
+		Heading:             float64(memory.Heading),
+		Pitch:               float64(memory.Pitch),
+		Roll:                float64(memory.Roll),
+		CarDamage:           oneDimensionSliceFloat32To64(memory.CarDamage[:]),
+		PitLimiterOn:        int64(memory.PitLimiterOn),
+		Abs:                 float64(memory.Abs),
+		AutoShifterOn:       int64(memory.AutoShifterOn),
+		TurboBoost:          float64(memory.TurboBoost),
+		AirTemp:             float64(memory.AirTemp),
+		RoadTemp:            float64(memory.RoadTemp),
+		LocalAngularVel:     oneDimensionSliceFloat32To64(memory.LocalAngularVel[:]),
+		FinalFF:             float64(memory.FinalFF),
+		BrakeTemp:           oneDimensionSliceFloat32To64(memory.BrakeTemp[:]),
+		Clutch:              float64(memory.Clutch),
+		IsAIControlled:      int64(memory.IsAIControlled),
+		TyreContactPoint:    twoDimensionSliceFloat32To64(floatArray4_3ToSlice(memory.TyreContactPoint)),
+		TyreContactNormal:   twoDimensionSliceFloat32To64(floatArray4_3ToSlice(memory.TyreContactNormal)),
+		TyreContactHeading:  twoDimensionSliceFloat32To64(floatArray4_3ToSlice(memory.TyreContactHeading)),
+		BrakeBias:           float64(memory.BrakeBias),
+		LocalVelocity:       oneDimensionSliceFloat32To64(memory.LocalVelocity[:]),
+		SlipRatio:           oneDimensionSliceFloat32To64(memory.SlipRatio[:]),
+		SlipAngle:           oneDimensionSliceFloat32To64(memory.SlipAngle[:]),
+		WaterTemp:           float64(memory.WaterTemp),
+		BrakePressure:       oneDimensionSliceFloat32To64(memory.BrakePressure[:]),
+		FrontBrakeCompound:  int64(memory.FrontBrakeCompound),
+		RearBrakeCompound:   int64(memory.RearBrakeCompound),
+		PadLife:             oneDimensionSliceFloat32To64(memory.PadLife[:]),
+		DiscLife:            oneDimensionSliceFloat32To64(memory.DiscLife[:]),
+		IgnitionOn:          int64(memory.IgnitionOn),
+		StarterEngineOn:     int64(memory.StarterEngineOn),
+		IsEngineRunning:     int64(memory.IsEngineRunning),
+		KerbVibration:       float64(memory.KerbVibration),
+		SlipVibrations:      float64(memory.SlipVibrations),
+		GVibrations:         float64(memory.GVibrations),
+		AbsVibrations:       float64(memory.AbsVibrations),
 	}
 }

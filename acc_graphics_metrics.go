@@ -1,10 +1,13 @@
 package model
 
+
 import (
 	"reflect"
 	"time"
 )
 
+
+// AccGraphicsMetrics is the name of the AccGraphics metrics.
 type AccGraphicsMetrics struct {
 	ID                       string      `json:"id"`
 	UserID                   string      `json:"userId"`
@@ -98,32 +101,9 @@ type AccGraphicsMetrics struct {
 	GapBehind                int64       `json:"gapBehind"`
 }
 
-func (metric *AccGraphicsMetrics) Game() string {
-	return AssettoCorsaCompetizione
-}
-
-func (metric *AccGraphicsMetrics) Name() string {
-	return AccGraphicsMetricsName
-}
-
-func (metric *AccGraphicsMetrics) DataPoints() []string {
-	v := reflect.ValueOf(metric)
-	t := v.Type()
-
-	fieldNames := make([]string, 0, v.NumField())
-	for i := range v.NumField() {
-		fieldNames = append(fieldNames, t.Field(i).Name)
-	}
-
-	return fieldNames
-}
-
-func (metric *AccGraphicsMetrics) AddSessionInfo(userID, sessionID string) {
-	metric.UserID = userID
-	metric.SessionID = sessionID
-}
 
 //nolint:funlen
+// NewAccGraphicsMetrics creates a new AccGraphicsMetrics struct with default values.
 func NewAccGraphicsMetrics() *AccGraphicsMetrics {
 	return &AccGraphicsMetrics{
 		ID:                       "",
@@ -217,4 +197,37 @@ func NewAccGraphicsMetrics() *AccGraphicsMetrics {
 		GapAhead:                 0,
 		GapBehind:                0,
 	}
+}
+
+
+// Game returns the name of the game for the AccGraphicsMetrics metric.
+func (metric *AccGraphicsMetrics) Game() string {
+	return AssettoCorsaCompetizione
+}
+
+
+// Name returns the name of the AccGraphicsMetrics metric.
+func (metric *AccGraphicsMetrics) Name() string {
+	return AccGraphicsMetricsName
+}
+
+
+// DataPoints returns the field names of the AccGraphicsMetrics struct.
+func (metric *AccGraphicsMetrics) DataPoints() []string {
+	v := reflect.ValueOf(metric)
+	t := v.Type()
+
+	fieldNames := make([]string, 0, v.NumField())
+	for i := range v.NumField() {
+		fieldNames = append(fieldNames, t.Field(i).Name)
+	}
+
+	return fieldNames
+}
+
+
+// AddSessionInfo adds the user ID and session ID to the metric.
+func (metric *AccGraphicsMetrics) AddSessionInfo(userID, sessionID string) {
+	metric.UserID = userID
+	metric.SessionID = sessionID
 }

@@ -1,5 +1,6 @@
 package model
 
+
 import (
 	"fmt"
 	"hash/fnv"
@@ -9,6 +10,8 @@ import (
 	"unsafe"
 )
 
+
+// AccGraphicsData represents the structure of the ACC graphics data shared memory.
 type AccGraphicsData struct {
 	PacketID                 int32
 	Status                   int32
@@ -99,14 +102,115 @@ type AccGraphicsData struct {
 	GapBehind                int32
 }
 
+
+//nolint:funlen
+// NewAccGraphicsData creates a new instance of AccGraphicsData with default values.
+func NewAccGraphicsData() *AccGraphicsData {
+	return &AccGraphicsData{
+		PacketID:                 0,
+		Status:                   0,
+		Session:                  0,
+		CurrentTime:              [15]uint16{},
+		LastTime:                 [15]uint16{},
+		BestTime:                 [15]uint16{},
+		Split:                    [15]uint16{},
+		CompletedLaps:            0,
+		Position:                 0,
+		ICurrentTime:             0,
+		ILastTime:                0,
+		IBestTime:                0,
+		SessionTimeLeft:          0,
+		DistanceTraveled:         0.0,
+		IsInPit:                  0,
+		CurrentSectorIndex:       0,
+		LastSectorTime:           0,
+		NumberOfLaps:             0,
+		TyreCompound:             [33]uint16{},
+		ReplayTimeMultiplier:     0.0,
+		NormalizedCarPosition:    0.0,
+		ActiveCars:               0,
+		AarCoordinates:           [60][3]float32{},
+		CarID:                    [60]int32{},
+		PlayerCarID:              0,
+		PenaltyTime:              0.0,
+		Flag:                     0,
+		Penalty:                  0,
+		IdealLineOn:              0,
+		IsInPitLane:              0,
+		SurfaceGrip:              0.0,
+		MandatoryPitDone:         0,
+		WindSpeed:                0.0,
+		WindDirection:            0.0,
+		IsSetupMenuVisible:       0,
+		MainDisplayIndex:         0,
+		SecondaryDisplayIndex:    0,
+		Tc:                       0,
+		TcCut:                    0,
+		EngineMap:                0,
+		Abs:                      0,
+		FuelXLap:                 0.0,
+		RainLights:               0,
+		FlashingLights:           0,
+		LightsStage:              0,
+		ExhaustTemperature:       0.0,
+		WiperLV:                  0,
+		DriverStintTotalTimeLeft: 0,
+		DriverStintTimeLeft:      0,
+		RainTyres:                0,
+		SessionIndex:             0,
+		UsedFuel:                 0.0,
+		DeltaLapTime:             [15]uint16{},
+		IDeltaLapTime:            0,
+		EstimatedLapTime:         [15]uint16{},
+		IEstimatedLapTime:        0,
+		IsDeltaPositive:          0,
+		ISplit:                   0,
+		IsValidLap:               0,
+		FuelEstimatedLaps:        0.0,
+		TrackStatus:              [33]uint16{},
+		MissingMandatoryPits:     0,
+		Clock:                    0.0,
+		DirectionLightsLeft:      0,
+		DirectionLightsRight:     0,
+		GlobalYellow:             0,
+		GlobalYellow1:            0,
+		GlobalYellow2:            0,
+		GlobalYellow3:            0,
+		GlobalWhite:              0,
+		GlobalGreen:              0,
+		GlobalChequered:          0,
+		GlobalRed:                0,
+		MfdTyreSet:               0,
+		MfdFuelToAdd:             0.0,
+		MfdTyrePressureLF:        0.0,
+		MfdTyrePressureRF:        0.0,
+		MfdTyrePressureLR:        0.0,
+		MfdTyrePressureRR:        0.0,
+		TrackGripStatus:          0,
+		RainIntensity:            0,
+		RainIntensityIn10min:     0,
+		RainIntensityIn30min:     0,
+		CurrentTyreSet:           0,
+		StrategyTyreSet:          0,
+		GapAhead:                 0,
+		GapBehind:                0,
+	}
+}
+
+
+// Name returns the name of the shared memory file for ACC graphics data.
 func (memory *AccGraphicsData) Name() string {
 	return AccGraphicsFileName
 }
 
+
+// Path returns the full path to the shared memory file for ACC graphics data.
 func (memory *AccGraphicsData) Path() string {
 	return AccFilesPrefix + memory.Name()
 }
 
+
+// ReadFrequency returns the frequency at which the ACC graphics data should be read.
 func (memory *AccGraphicsData) ReadFrequency() time.Duration {
 	frequencyMs := getUint64Env(memory.Name()+ReadFrequencySuffix, AccGraphicsDefaultReadFrequency)
 	if frequencyMs > uint64(MaxAllowedMs) {
@@ -122,9 +226,13 @@ func (memory *AccGraphicsData) ReadFrequency() time.Duration {
 	return time.Duration(frequencyMs) * time.Millisecond
 }
 
+
+// Hash generates a hash based on the PacketID of the ACC graphics data.
 func (memory *AccGraphicsData) Hash() uint32 {
 	hasher := fnv.New32a()
-	if _, err := fmt.Fprintf(hasher, "%d", memory.PacketID); err != nil {
+
+	_, err := fmt.Fprintf(hasher, "%d", memory.PacketID)
+	if err != nil {
 		log.Printf("WARNING: Failed to generate hash for %s: %s\n", memory.Name(), err.Error())
 
 		return 0
@@ -133,12 +241,17 @@ func (memory *AccGraphicsData) Hash() uint32 {
 	return hasher.Sum32()
 }
 
+
+//nolint:gosec
+// MapValues maps the values from a memory pointer to the AccGraphicsData struct.
 func (memory *AccGraphicsData) MapValues(pointer uintptr) {
-	newValue := (*AccGraphicsData)(unsafe.Pointer(pointer))
+	newValue := (*AccGraphicsData)(unsafe.Pointer(pointer))//nolint:govet
 	*memory = *newValue
 }
 
+
 //nolint:funlen
+// CreateMetric creates a new AccGraphicsMetrics instance from the current AccGraphicsData.
 func (memory *AccGraphicsData) CreateMetric() *AccGraphicsMetrics {
 	return &AccGraphicsMetrics{
 		ID:                       "",
@@ -231,98 +344,5 @@ func (memory *AccGraphicsData) CreateMetric() *AccGraphicsMetrics {
 		StrategyTyreSet:          int64(memory.StrategyTyreSet),
 		GapAhead:                 int64(memory.GapAhead),
 		GapBehind:                int64(memory.GapBehind),
-	}
-}
-
-//nolint:funlen
-func NewAccGraphicsData() *AccGraphicsData {
-	return &AccGraphicsData{
-		PacketID:                 0,
-		Status:                   0,
-		Session:                  0,
-		CurrentTime:              [15]uint16{},
-		LastTime:                 [15]uint16{},
-		BestTime:                 [15]uint16{},
-		Split:                    [15]uint16{},
-		CompletedLaps:            0,
-		Position:                 0,
-		ICurrentTime:             0,
-		ILastTime:                0,
-		IBestTime:                0,
-		SessionTimeLeft:          0,
-		DistanceTraveled:         0.0,
-		IsInPit:                  0,
-		CurrentSectorIndex:       0,
-		LastSectorTime:           0,
-		NumberOfLaps:             0,
-		TyreCompound:             [33]uint16{},
-		ReplayTimeMultiplier:     0.0,
-		NormalizedCarPosition:    0.0,
-		ActiveCars:               0,
-		AarCoordinates:           [60][3]float32{},
-		CarID:                    [60]int32{},
-		PlayerCarID:              0,
-		PenaltyTime:              0.0,
-		Flag:                     0,
-		Penalty:                  0,
-		IdealLineOn:              0,
-		IsInPitLane:              0,
-		SurfaceGrip:              0.0,
-		MandatoryPitDone:         0,
-		WindSpeed:                0.0,
-		WindDirection:            0.0,
-		IsSetupMenuVisible:       0,
-		MainDisplayIndex:         0,
-		SecondaryDisplayIndex:    0,
-		Tc:                       0,
-		TcCut:                    0,
-		EngineMap:                0,
-		Abs:                      0,
-		FuelXLap:                 0.0,
-		RainLights:               0,
-		FlashingLights:           0,
-		LightsStage:              0,
-		ExhaustTemperature:       0.0,
-		WiperLV:                  0,
-		DriverStintTotalTimeLeft: 0,
-		DriverStintTimeLeft:      0,
-		RainTyres:                0,
-		SessionIndex:             0,
-		UsedFuel:                 0.0,
-		DeltaLapTime:             [15]uint16{},
-		IDeltaLapTime:            0,
-		EstimatedLapTime:         [15]uint16{},
-		IEstimatedLapTime:        0,
-		IsDeltaPositive:          0,
-		ISplit:                   0,
-		IsValidLap:               0,
-		FuelEstimatedLaps:        0.0,
-		TrackStatus:              [33]uint16{},
-		MissingMandatoryPits:     0,
-		Clock:                    0.0,
-		DirectionLightsLeft:      0,
-		DirectionLightsRight:     0,
-		GlobalYellow:             0,
-		GlobalYellow1:            0,
-		GlobalYellow2:            0,
-		GlobalYellow3:            0,
-		GlobalWhite:              0,
-		GlobalGreen:              0,
-		GlobalChequered:          0,
-		GlobalRed:                0,
-		MfdTyreSet:               0,
-		MfdFuelToAdd:             0.0,
-		MfdTyrePressureLF:        0.0,
-		MfdTyrePressureRF:        0.0,
-		MfdTyrePressureLR:        0.0,
-		MfdTyrePressureRR:        0.0,
-		TrackGripStatus:          0,
-		RainIntensity:            0,
-		RainIntensityIn10min:     0,
-		RainIntensityIn30min:     0,
-		CurrentTyreSet:           0,
-		StrategyTyreSet:          0,
-		GapAhead:                 0,
-		GapBehind:                0,
 	}
 }

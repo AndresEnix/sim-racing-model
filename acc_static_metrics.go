@@ -1,10 +1,13 @@
 package model
 
+
 import (
 	"reflect"
 	"time"
 )
 
+
+// AccStaticMetrics is the name of the AccStatic metrics.
 type AccStaticMetrics struct {
 	ID                  string    `json:"id"`
 	UserID              string    `json:"userId"`
@@ -37,31 +40,8 @@ type AccStaticMetrics struct {
 	WetTyresName        string    `json:"wetTyresName"`
 }
 
-func (metric *AccStaticMetrics) Game() string {
-	return AssettoCorsaCompetizione
-}
 
-func (metric *AccStaticMetrics) Name() string {
-	return AccStaticMetricsName
-}
-
-func (metric *AccStaticMetrics) DataPoints() []string {
-	v := reflect.ValueOf(metric)
-	t := v.Type()
-
-	fieldNames := make([]string, 0, v.NumField())
-	for i := range v.NumField() {
-		fieldNames = append(fieldNames, t.Field(i).Name)
-	}
-
-	return fieldNames
-}
-
-func (metric *AccStaticMetrics) AddSessionInfo(userID, sessionID string) {
-	metric.UserID = userID
-	metric.SessionID = sessionID
-}
-
+// NewAccStaticMetrics creates a new AccStaticMetrics struct with default values.
 func NewAccStaticMetrics() *AccStaticMetrics {
 	return &AccStaticMetrics{
 		ID:                  "",
@@ -94,4 +74,37 @@ func NewAccStaticMetrics() *AccStaticMetrics {
 		DryTyresName:        "",
 		WetTyresName:        "",
 	}
+}
+
+
+// Game returns the name of the game for the AccStaticMetrics metric.
+func (metric *AccStaticMetrics) Game() string {
+	return AssettoCorsaCompetizione
+}
+
+
+// Name returns the name of the AccStaticMetrics metric.
+func (metric *AccStaticMetrics) Name() string {
+	return AccStaticMetricsName
+}
+
+
+// DataPoints returns the field names of the AccStaticMetrics struct.
+func (metric *AccStaticMetrics) DataPoints() []string {
+	v := reflect.ValueOf(metric)
+	t := v.Type()
+
+	fieldNames := make([]string, 0, v.NumField())
+	for i := range v.NumField() {
+		fieldNames = append(fieldNames, t.Field(i).Name)
+	}
+
+	return fieldNames
+}
+
+
+// AddSessionInfo adds the user ID and session ID to the metric.
+func (metric *AccStaticMetrics) AddSessionInfo(userID, sessionID string) {
+	metric.UserID = userID
+	metric.SessionID = sessionID
 }

@@ -1,5 +1,6 @@
 package model
 
+
 import (
 	"fmt"
 	"hash/fnv"
@@ -9,6 +10,8 @@ import (
 	"unsafe"
 )
 
+
+// AccStaticData represents the structure of the ACC graphics data shared memory.
 type AccStaticData struct {
 	SmVersion                [15]uint16
 	AcVersion                [15]uint16
@@ -57,109 +60,8 @@ type AccStaticData struct {
 	WetTyresName             [33]uint16
 }
 
-func (memory *AccStaticData) Name() string {
-	return AccStaticFileName
-}
 
-func (memory *AccStaticData) Path() string {
-	return AccFilesPrefix + memory.Name()
-}
-
-func (memory *AccStaticData) ReadFrequency() time.Duration {
-	frequencyMs := getUint64Env(memory.Name()+ReadFrequencySuffix, AccStaticDefaultReadFrequency)
-	if frequencyMs > uint64(MaxAllowedMs) {
-		log.Printf(
-			"WARNING: Duration value (%d ms) from %s overflows time.Duration. Capping at MaxDuration.\n",
-			frequencyMs,
-			memory.Name()+ReadFrequencySuffix,
-		)
-
-		return time.Duration(math.MaxInt64)
-	}
-
-	return time.Duration(frequencyMs) * time.Millisecond
-}
-
-func (memory *AccStaticData) Hash() uint32 {
-	hasher := fnv.New32a()
-	if _, err := hasher.Write([]byte(uint16ToString(memory.SmVersion[:]))); err != nil {
-		log.Printf("WARNING: Failed to use SmVersion in %s hash: %s\n", memory.Name(), err.Error())
-	}
-
-	if _, err := hasher.Write([]byte(uint16ToString(memory.AcVersion[:]))); err != nil {
-		log.Printf("WARNING: Failed to use AcVersion in %s hash: %s\n", memory.Name(), err.Error())
-	}
-
-	if _, err := fmt.Fprintf(hasher, "%d", memory.NumberOfSessions); err != nil {
-		log.Printf("WARNING: Failed to use NumberOfSessions in %s hash: %s\n", memory.Name(), err.Error())
-	}
-
-	if _, err := fmt.Fprintf(hasher, "%d", memory.NumCars); err != nil {
-		log.Printf("WARNING: Failed to use NumCars in %s hash: %s\n", memory.Name(), err.Error())
-	}
-
-	if _, err := hasher.Write([]byte(uint16ToString(memory.CarModel[:]))); err != nil {
-		log.Printf("WARNING: Failed to use CarModel in %s hash: %s\n", memory.Name(), err.Error())
-	}
-
-	if _, err := hasher.Write([]byte(uint16ToString(memory.Track[:]))); err != nil {
-		log.Printf("WARNING: Failed to use Track in %s hash: %s\n", memory.Name(), err.Error())
-	}
-
-	if _, err := hasher.Write([]byte(uint16ToString(memory.PlayerName[:]))); err != nil {
-		log.Printf("WARNING: Failed to use PlayerName in %s hash: %s\n", memory.Name(), err.Error())
-	}
-
-	if _, err := hasher.Write([]byte(uint16ToString(memory.PlayerSurname[:]))); err != nil {
-		log.Printf("WARNING: Failed to use PlayerSurname in %s hash: %s\n", memory.Name(), err.Error())
-	}
-
-	if _, err := hasher.Write([]byte(uint16ToString(memory.PlayerNick[:]))); err != nil {
-		log.Printf("WARNING: Failed to use PlayerNick in %s hash: %s\n", memory.Name(), err.Error())
-	}
-
-	return hasher.Sum32()
-}
-
-func (memory *AccStaticData) MapValues(pointer uintptr) {
-	newValue := (*AccStaticData)(unsafe.Pointer(pointer))
-	*memory = *newValue
-}
-
-func (memory *AccStaticData) CreateMetric() *AccStaticMetrics {
-	return &AccStaticMetrics{
-		ID:                  "",
-		UserID:              "",
-		SessionID:           "",
-		Timestamp:           time.Now().UTC(),
-		SmVersion:           uint16ToString(memory.SmVersion[:]),
-		AcVersion:           uint16ToString(memory.AcVersion[:]),
-		NumberOfSessions:    int64(memory.NumberOfSessions),
-		NumCars:             int64(memory.NumCars),
-		CarModel:            uint16ToString(memory.CarModel[:]),
-		Track:               uint16ToString(memory.Track[:]),
-		PlayerName:          uint16ToString(memory.PlayerName[:]),
-		PlayerSurname:       uint16ToString(memory.PlayerSurname[:]),
-		PlayerNick:          uint16ToString(memory.PlayerNick[:]),
-		SectorCount:         int64(memory.SectorCount),
-		MaxRpm:              int64(memory.MaxRpm),
-		MaxFuel:             float64(memory.MaxFuel),
-		PenaltiesEnabled:    int64(memory.PenaltiesEnabled),
-		AidFuelRate:         float64(memory.AidFuelRate),
-		AidTireRate:         float64(memory.AidTireRate),
-		AidMechanicalDamage: float64(memory.AidMechanicalDamage),
-		AllowTyreBlankets:   float64(memory.AllowTyreBlankets),
-		AidStability:        float64(memory.AidStability),
-		AidAutoClutch:       int64(memory.AidAutoClutch),
-		AidAutoBlip:         int64(memory.AidAutoBlip),
-		PitWindowStart:      int64(memory.PitWindowStart),
-		PitWindowEnd:        int64(memory.PitWindowEnd),
-		IsOnline:            int64(memory.IsOnline),
-		DryTyresName:        uint16ToString(memory.DryTyresName[:]),
-		WetTyresName:        uint16ToString(memory.WetTyresName[:]),
-	}
-}
-
+// NewAccStaticData creates a new instance of AccStaticData with default values.
 func NewAccStaticData() *AccStaticData {
 	return &AccStaticData{
 		SmVersion:                [15]uint16{},
@@ -207,5 +109,131 @@ func NewAccStaticData() *AccStaticData {
 		IsOnline:                 0,
 		DryTyresName:             [33]uint16{},
 		WetTyresName:             [33]uint16{},
+	}
+}
+
+
+// Name returns the name of the shared memory file for ACC static data.
+func (memory *AccStaticData) Name() string {
+	return AccStaticFileName
+}
+
+
+// Path returns the full path to the shared memory file for ACC static data.
+func (memory *AccStaticData) Path() string {
+	return AccFilesPrefix + memory.Name()
+}
+
+
+// ReadFrequency returns the frequency at which the ACC static data should be read.
+func (memory *AccStaticData) ReadFrequency() time.Duration {
+	frequencyMs := getUint64Env(memory.Name()+ReadFrequencySuffix, AccStaticDefaultReadFrequency)
+	if frequencyMs > uint64(MaxAllowedMs) {
+		log.Printf(
+			"WARNING: Duration value (%d ms) from %s overflows time.Duration. Capping at MaxDuration.\n",
+			frequencyMs,
+			memory.Name()+ReadFrequencySuffix,
+		)
+
+		return time.Duration(math.MaxInt64)
+	}
+
+	return time.Duration(frequencyMs) * time.Millisecond
+}
+
+
+// Hash generates a hash based on a combination of fields of the ACC static data.
+func (memory *AccStaticData) Hash() uint32 {
+	hasher := fnv.New32a()
+	
+	_, err := hasher.Write([]byte(uint16ToString(memory.SmVersion[:])))
+	if err != nil {
+		log.Printf("WARNING: Failed to use SmVersion in %s hash: %s\n", memory.Name(), err.Error())
+	}
+
+	_, err = hasher.Write([]byte(uint16ToString(memory.AcVersion[:])))
+	if err != nil {
+		log.Printf("WARNING: Failed to use AcVersion in %s hash: %s\n", memory.Name(), err.Error())
+	}
+
+	_, err = fmt.Fprintf(hasher, "%d", memory.NumberOfSessions)
+	if err != nil {
+		log.Printf("WARNING: Failed to use NumberOfSessions in %s hash: %s\n", memory.Name(), err.Error())
+	}
+
+	_, err = fmt.Fprintf(hasher, "%d", memory.NumCars)
+	if err != nil {
+		log.Printf("WARNING: Failed to use NumCars in %s hash: %s\n", memory.Name(), err.Error())
+	}
+
+	_, err = hasher.Write([]byte(uint16ToString(memory.CarModel[:])))
+	if err != nil {
+		log.Printf("WARNING: Failed to use CarModel in %s hash: %s\n", memory.Name(), err.Error())
+	}
+
+	_, err = hasher.Write([]byte(uint16ToString(memory.Track[:])))
+	if err != nil {
+		log.Printf("WARNING: Failed to use Track in %s hash: %s\n", memory.Name(), err.Error())
+	}
+
+	_, err = hasher.Write([]byte(uint16ToString(memory.PlayerName[:])))
+	if err != nil {
+		log.Printf("WARNING: Failed to use PlayerName in %s hash: %s\n", memory.Name(), err.Error())
+	}
+
+	_, err = hasher.Write([]byte(uint16ToString(memory.PlayerSurname[:])))
+	if err != nil {
+		log.Printf("WARNING: Failed to use PlayerSurname in %s hash: %s\n", memory.Name(), err.Error())
+	}
+
+	_, err = hasher.Write([]byte(uint16ToString(memory.PlayerNick[:])))
+	if err != nil {
+		log.Printf("WARNING: Failed to use PlayerNick in %s hash: %s\n", memory.Name(), err.Error())
+	}
+
+	return hasher.Sum32()
+}
+
+
+//nolint:gosec
+// MapValues maps the values from a memory pointer to the AccStaticData struct.
+func (memory *AccStaticData) MapValues(pointer uintptr) {
+	newValue := (*AccStaticData)(unsafe.Pointer(pointer))//nolint:govet
+	*memory = *newValue
+}
+
+
+// CreateMetric creates a new AccStaticMetrics instance from the current AccStaticData.
+func (memory *AccStaticData) CreateMetric() *AccStaticMetrics {
+	return &AccStaticMetrics{
+		ID:                  "",
+		UserID:              "",
+		SessionID:           "",
+		Timestamp:           time.Now().UTC(),
+		SmVersion:           uint16ToString(memory.SmVersion[:]),
+		AcVersion:           uint16ToString(memory.AcVersion[:]),
+		NumberOfSessions:    int64(memory.NumberOfSessions),
+		NumCars:             int64(memory.NumCars),
+		CarModel:            uint16ToString(memory.CarModel[:]),
+		Track:               uint16ToString(memory.Track[:]),
+		PlayerName:          uint16ToString(memory.PlayerName[:]),
+		PlayerSurname:       uint16ToString(memory.PlayerSurname[:]),
+		PlayerNick:          uint16ToString(memory.PlayerNick[:]),
+		SectorCount:         int64(memory.SectorCount),
+		MaxRpm:              int64(memory.MaxRpm),
+		MaxFuel:             float64(memory.MaxFuel),
+		PenaltiesEnabled:    int64(memory.PenaltiesEnabled),
+		AidFuelRate:         float64(memory.AidFuelRate),
+		AidTireRate:         float64(memory.AidTireRate),
+		AidMechanicalDamage: float64(memory.AidMechanicalDamage),
+		AllowTyreBlankets:   float64(memory.AllowTyreBlankets),
+		AidStability:        float64(memory.AidStability),
+		AidAutoClutch:       int64(memory.AidAutoClutch),
+		AidAutoBlip:         int64(memory.AidAutoBlip),
+		PitWindowStart:      int64(memory.PitWindowStart),
+		PitWindowEnd:        int64(memory.PitWindowEnd),
+		IsOnline:            int64(memory.IsOnline),
+		DryTyresName:        uint16ToString(memory.DryTyresName[:]),
+		WetTyresName:        uint16ToString(memory.WetTyresName[:]),
 	}
 }
