@@ -37,7 +37,6 @@ jobs:
       - name: setup release
         run: |
           go install github.com/go-semantic-release/semantic-release/v2/cmd/semantic-release@v2.31.0
-          go-semantic-release
       - name: release
         uses: go-semantic-release/action@v1
         env:
