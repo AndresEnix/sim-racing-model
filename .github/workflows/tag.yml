@@ -26,28 +26,9 @@ jobs:
         uses: anothrNick/github-tag-action@v1 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_PREFIX: v
           
       - name: Log New Tag
         if: steps.tagger.outputs.new_tag != ''
         run: |
             echo 'Generated Tag: ${{ steps.tagger.outputs.new_tag }}'
-        
-      #- name: Trigger Release Workflow
-      #  if: steps.tagger.outputs.new_tag != ''
-      #  uses: actions/github-script@v7
-      #  with:
-      #    github-token: ${{ secrets.GITHUB_TOKEN }}
-      #    script: |
-      #      const newTag = "${{ steps.tagger.outputs.new_tag }}";
-      #      
-      #      console.log(`Dispatching release workflow for tag: ${newTag}`);
-      #      
-      #      await github.rest.actions.createWorkflowDispatch({
-      #        owner: context.repo.owner,
-      #        repo: context.repo.repo,
-      #        workflow_id: 'release.yml',
-      #        ref: context.ref,
-      #        client_payload: {
-      #          tag: newTag
-      #        }
-      #      });
