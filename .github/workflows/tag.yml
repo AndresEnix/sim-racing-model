@@ -22,37 +22,32 @@ jobs:
           
       - name: Calculate and Create Tag
         id: tagger
-        # Use the latest major version for security/maintenance
         uses: anothrNick/github-tag-action@v1 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Use WITH_V: true if you want the tag to be v1.0.0
-          # WITH_V: true
+          # WITH_V: true # adds 'v' prefix if desired
           
       - name: Log New Tag
-        # This step will only run if a new tag was successfully created
         if: steps.tagger.outputs.new_tag != ''
         run: echo "Generated Tag: ${{ steps.tagger.outputs.new_tag }}"
         
       - name: Trigger Release Workflow
-        # This conditional step checks if a tag was created before dispatching
         if: steps.tagger.outputs.new_tag != ''
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          # Pass the new tag directly as an input variable to the script
+          # 🟢 CORRECTION: Use the pipe (|) for cleaner multi-line script syntax
           script: |
             const newTag = "${{ steps.tagger.outputs.new_tag }}";
             
             console.log(`Dispatching release workflow for tag: ${newTag}`);
             
             // This triggers the second workflow (02-release.yml)
-            // The 'client_payload' passes the new tag name
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: 'release.yml', # Must match the filename of your second workflow
-              ref: context.ref, # Use the current branch (main)
+              workflow_id: 'release.yml',
+              ref: context.ref,
               client_payload: {
                 tag: newTag
               }
