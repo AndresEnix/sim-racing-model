@@ -34,10 +34,11 @@ jobs:
         run: go mod tidy
       - name: test
         run: go test -v ./...
-      - name: release
+      - name: setup release
         run: |
-          export PATH="$PATH:$(go env GOPATH)/bin"
           go install github.com/go-semantic-release/semantic-release/v2/cmd/semantic-release@v2.31.0
           go-semantic-release
+      - name: release
+        uses: go-semantic-release/action@v1
         env:
           github-token: ${{ secrets.GITHUB_TOKEN }}
