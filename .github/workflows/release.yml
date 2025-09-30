@@ -44,6 +44,7 @@ jobs:
           echo "goarch=${{ matrix.goarch }}" >> $GITHUB_OUTPUT
           echo "ext=${{ matrix.asset_ext }}" >> $GITHUB_OUTPUT
           echo "bin_name=$BIN_NAME" >> $GITHUB_OUTPUT
+        shell: bash
           
       - name: Build Binary
         run: |
