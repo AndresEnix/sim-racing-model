@@ -51,19 +51,20 @@ jobs:
           env GOOS=${{ steps.vars.outputs.goos }} GOARCH=${{ steps.vars.outputs.goarch }} go build -o ${{ steps.vars.outputs.bin_name }}
         
       - name: Package Binary
+        if: runner.os == 'ubuntu-latest' || runner.os == 'macos-latest'
         id: package
         run: |
           ASSET_FILE="${{ steps.vars.outputs.bin_name }}_${{ steps.vars.outputs.goos }}_${{ steps.vars.outputs.goarch }}.${{ steps.vars.outputs.ext }}"
+          # Linux/macOS: use tar to create a tar.gz file
+          tar -czvf "$ASSET_FILE" "${{ steps.vars.outputs.bin_name }}"
           
-          # The `runner_os` is used here to determine the compression utility
-          if ( "${{ matrix.runner_os }}" == "windows-latest" ) {
-            # Windows: use 7z to create a zip file (usually pre-installed)
-            7z a "$ASSET_FILE" "${{ steps.vars.outputs.bin_name }}.exe"
-          } else {
-            # Linux/macOS: use tar to create a tar.gz file
-            tar -czvf "$ASSET_FILE" "${{ steps.vars.outputs.bin_name }}"
-          }
-          
+          echo "asset_file=$ASSET_FILE" >> $GITHUB_OUTPUT
+      - name: Package Binary (windows)
+        if: runner.os == 'windows-latest'
+        id: package
+        run: |
+          ASSET_FILE="${{ steps.vars.outputs.bin_name }}_${{ steps.vars.outputs.goos }}_${{ steps.vars.outputs.goarch }}.${{ steps.vars.outputs.ext }}"
+          7z a "$ASSET_FILE" "${{ steps.vars.outputs.bin_name }}.exe"
           echo "asset_file=$ASSET_FILE" >> $GITHUB_OUTPUT
 
       - name: Upload Artifact
