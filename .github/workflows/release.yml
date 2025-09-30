@@ -101,6 +101,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG_PREFIX: v
           DRY_RUN: true
+          DEFAULT_BUMP: patch
       - name: Download all assets
         uses: actions/download-artifact@v4
         with:
