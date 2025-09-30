@@ -25,11 +25,6 @@ jobs:
             goarch: amd64
             asset_ext: tar.gz
           
-    outputs:
-      new_tag: ${{ steps.tagger.outputs.new_tag }}
-    permissions:
-      contents: write
-      actions: write
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -75,13 +70,6 @@ jobs:
         with:
           name: ${{ steps.package.outputs.asset_file }}
           path: ${{ steps.package.outputs.asset_file }}
-      - name: Calculate and Create Tag
-        id: tagger
-        uses: anothrNick/github-tag-action@v1 
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG_PREFIX: v
-          DRY_RUN: true
 
   create_release:
     name: Create GitHub Release
@@ -89,8 +77,17 @@ jobs:
     needs: build_assets
     permissions:
       contents: write 
-      
+      actions: write
+    outputs:
+      new_tag: ${{ steps.tagger.outputs.new_tag }}
     steps:
+      - name: Calculate and Create Tag
+        id: tagger
+        uses: anothrNick/github-tag-action@v1 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_PREFIX: v
+          DRY_RUN: true
       - name: Download all assets
         uses: actions/download-artifact@v4
         with:
