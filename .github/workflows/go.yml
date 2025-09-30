@@ -39,5 +39,5 @@ jobs:
           go install github.com/go-semantic-release/semantic-release/v2/cmd/semantic-release@v2.31.0
       - name: release
         uses: go-semantic-release/action@v1
-        env:
+        with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
