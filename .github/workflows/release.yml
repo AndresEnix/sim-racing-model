@@ -32,10 +32,10 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version: 'stable'
-      - name: Install Go dependencies
-        run: ./build.sh
+      - name: Build and Set Variables
         id: vars
         run: |
+          ./build.sh
           BIN_NAME="${{ github.event.repository.name }}"
           if [[ "${{ matrix.goos }}" == "windows" ]]; then
             FULL_BIN_NAME="${BIN_NAME}.exe"
