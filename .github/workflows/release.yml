@@ -11,14 +11,23 @@ on:
         
 jobs:
   build_assets:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.runner_os }} # <-- Changed to runner_os
     strategy:
       matrix:
+        # 🟢 CORRECTION: Use a map (key: value) structure for matrix inputs
         include:
-          # Define your cross-compilation targets
-          - os: ubuntu-latest; goos: linux; goarch: amd64; asset_ext: tar.gz
-          - os: windows-latest; goos: windows; goarch: amd64; asset_ext: zip
-          - os: macos-latest; goos: darwin; goarch: amd64; asset_ext: tar.gz
+          - runner_os: ubuntu-latest
+            goos: linux
+            goarch: amd64
+            asset_ext: tar.gz
+          - runner_os: windows-latest
+            goos: windows
+            goarch: amd64
+            asset_ext: zip
+          - runner_os: macos-latest
+            goos: darwin
+            goarch: amd64
+            asset_ext: tar.gz
           
     steps:
       - name: Checkout Code
@@ -32,22 +41,16 @@ jobs:
       - name: Prepare Variables
         id: vars
         run: |
-          # Parse matrix variables since they are semicolon-separated strings
-          OS=$(echo "${{ matrix.include }}" | cut -d';' -f1 | xargs)
-          GOOS=$(echo "${{ matrix.include }}" | cut -d';' -f2 | cut -d':' -f2 | xargs)
-          GOARCH=$(echo "${{ matrix.include }}" | cut -d';' -f3 | cut -d':' -f2 | xargs)
-          EXT=$(echo "${{ matrix.include }}" | cut -d';' -f4 | cut -d':' -f2 | xargs)
+          # Use the matrix variables directly (no complex parsing needed now!)
           BIN_NAME="${{ github.event.repository.name }}"
           
-          echo "os=$OS" >> $GITHUB_OUTPUT
-          echo "goos=$GOOS" >> $GITHUB_OUTPUT
-          echo "goarch=$GOARCH" >> $GITHUB_OUTPUT
-          echo "ext=$EXT" >> $GITHUB_OUTPUT
+          echo "goos=${{ matrix.goos }}" >> $GITHUB_OUTPUT
+          echo "goarch=${{ matrix.goarch }}" >> $GITHUB_OUTPUT
+          echo "ext=${{ matrix.asset_ext }}" >> $GITHUB_OUTPUT
           echo "bin_name=$BIN_NAME" >> $GITHUB_OUTPUT
           
       - name: Build Binary
         run: |
-          # Use the variables set in the previous step
           env GOOS=${{ steps.vars.outputs.goos }} GOARCH=${{ steps.vars.outputs.goarch }} go build -o ${{ steps.vars.outputs.bin_name }}
         
       - name: Package Binary
@@ -55,9 +58,12 @@ jobs:
         run: |
           ASSET_FILE="${{ steps.vars.outputs.bin_name }}_${{ steps.vars.outputs.goos }}_${{ steps.vars.outputs.goarch }}.${{ steps.vars.outputs.ext }}"
           
-          if [ "${{ steps.vars.outputs.os }}" == "windows-latest" ]; then
+          # The `runner_os` is used here to determine the compression utility
+          if [ "${{ matrix.runner_os }}" == "windows-latest" ]; then
+            # Windows: use 7z to create a zip file (usually pre-installed)
             7z a "$ASSET_FILE" "${{ steps.vars.outputs.bin_name }}.exe"
           else
+            # Linux/macOS: use tar to create a tar.gz file
             tar -czvf "$ASSET_FILE" "${{ steps.vars.outputs.bin_name }}"
           fi
           
@@ -74,7 +80,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build_assets
     permissions:
-      contents: write # Needed to create the final release and upload assets
+      contents: write 
       
     steps:
       - name: Download all assets
@@ -85,8 +91,6 @@ jobs:
       - name: Create Release and Upload Assets
         uses: softprops/action-gh-release@v2
         with:
-          # Use the tag passed from the first workflow via input
           tag_name: ${{ github.event.client_payload.tag }}
-          # Creates release notes from commits between the last release and the new tag
           generate_release_notes: true 
           files: assets/**/*
