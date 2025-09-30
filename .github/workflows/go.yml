@@ -1,13 +1,3 @@
-name: Release new version
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
 jobs:
   release:
     name: build, test and release
@@ -26,21 +16,16 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go }}
-      #- name: lint
-      #  uses: golangci/golangci-lint-action@v8
-      #  with:
-      #    version: v2.1
       - name: build
         run: go mod tidy
       - name: test
         run: go test -v ./...
-      #- name: setup release
-      #  run: |
-      #    go install github.com/go-semantic-release/semantic-release/v2/cmd/semantic-release@v2.31.0
-      #    echo "$(go env GOPATH)/bin" >> $GITHUB_PATH # Add GOPATH/bin to the PATH
-      #  
+      - name: install semantic-release
+        run: go install github.com/go-semantic-release/semantic-release/v2/cmd/semantic-release@v2.31.0
+      - name: Add Go Binaries to PATH
+        run: echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
+        shell: bash
       - name: release
         uses: go-semantic-release/action@v1
-        shell: bash
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
