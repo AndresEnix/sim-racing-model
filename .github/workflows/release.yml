@@ -75,8 +75,8 @@ jobs:
           name: ${{ steps.package.outputs.asset_file }}
           path: ${{ steps.package.outputs.asset_file }}
       - name: Upload Artifact Windows
-          id: upload-windows
-          if: runner.os == 'windows-latest'
+        id: upload-windows
+        if: runner.os == 'windows-latest'
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.package.outputs.asset_file }}
