@@ -9,8 +9,9 @@ type SharedMemoryData interface {
 	Name() string
 	Path() string
 	ReadFrequency() time.Duration
-	MapValues(pointer uintptr)
 	Hash() uint32
+	MapValues(pointer uintptr)
+	CreateMetricsJSON() ([]byte, error)
 }
 
 

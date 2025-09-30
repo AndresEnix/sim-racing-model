@@ -8,6 +8,7 @@ import (
 	"math"
 	"time"
 	"unsafe"
+	"encoding/json"
 )
 
 
@@ -246,9 +247,10 @@ func (memory *AccPhysicsData) MapValues(pointer uintptr) {
 }
 
 
-// CreateMetric creates a new AccPhysicsMetrics instance from the current AccPhysicsData.
-func (memory *AccPhysicsData) CreateMetric() *AccPhysicsMetrics {
-	return &AccPhysicsMetrics{
+//nolint:funlen
+// CreateMetricsJSON creates JSON bytes from the current AccPhysicsData.
+func (memory *AccPhysicsData) CreateMetricsJSON() ([]byte, error) {
+	accPhysicsMetrics := &AccPhysicsMetrics{
 		ID:                  "",
 		UserID:              "",
 		SessionID:           "",
@@ -305,4 +307,11 @@ func (memory *AccPhysicsData) CreateMetric() *AccPhysicsMetrics {
 		GVibrations:         float64(memory.GVibrations),
 		AbsVibrations:       float64(memory.AbsVibrations),
 	}
+	
+	metrics, err := json.Marshal(accPhysicsMetrics)
+	if err != nil {
+        return nil, fmt.Errorf("failed to marshal AccPhysicsData to JSON: %w", err)
+    }
+    
+    return metrics, nil
 }

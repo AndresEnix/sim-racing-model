@@ -8,6 +8,7 @@ import (
 	"math"
 	"time"
 	"unsafe"
+	"encoding/json"
 )
 
 
@@ -203,9 +204,9 @@ func (memory *AccStaticData) MapValues(pointer uintptr) {
 }
 
 
-// CreateMetric creates a new AccStaticMetrics instance from the current AccStaticData.
-func (memory *AccStaticData) CreateMetric() *AccStaticMetrics {
-	return &AccStaticMetrics{
+// CreateMetricsJSON creates JSON bytes from the current AccStaticData.
+func (memory *AccStaticData) CreateMetricsJSON() ([]byte, error) {
+	accStaticMetrics := &AccStaticMetrics{
 		ID:                  "",
 		UserID:              "",
 		SessionID:           "",
@@ -236,4 +237,11 @@ func (memory *AccStaticData) CreateMetric() *AccStaticMetrics {
 		DryTyresName:        uint16ToString(memory.DryTyresName[:]),
 		WetTyresName:        uint16ToString(memory.WetTyresName[:]),
 	}
+	
+	metrics, err := json.Marshal(accStaticMetrics)
+	if err != nil {
+        return nil, fmt.Errorf("failed to marshal AccStaticData to JSON: %w", err)
+    }
+    
+    return metrics, nil
 }
