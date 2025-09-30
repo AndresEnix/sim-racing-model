@@ -36,6 +36,7 @@ jobs:
         run: go test -v ./...
       - name: release
         run: |
+          export PATH="$PATH:$(go env GOPATH)/bin"
           go install github.com/go-semantic-release/semantic-release/v2/cmd/semantic-release@v2.31.0
           go-semantic-release
         env:
