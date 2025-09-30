@@ -42,14 +42,20 @@ jobs:
         id: vars
         run: |
           BIN_NAME="${{ github.event.repository.name }}"
+          if [[ "${{ matrix.goos }}" == "windows" ]]; then
+            FULL_BIN_NAME="${BIN_NAME}.exe"
+          else
+            FULL_BIN_NAME="${BIN_NAME}"
+          fi
           echo "goos=${{ matrix.goos }}" >> $GITHUB_OUTPUT
           echo "goarch=${{ matrix.goarch }}" >> $GITHUB_OUTPUT
           echo "ext=${{ matrix.asset_ext }}" >> $GITHUB_OUTPUT
           echo "bin_name=$BIN_NAME" >> $GITHUB_OUTPUT
+          echo "full_bin_name=$FULL_BIN_NAME" >> $GITHUB_OUTPUT
         shell: bash
       - name: Build Binary
         run: |
-          env GOOS=${{ steps.vars.outputs.goos }} GOARCH=${{ steps.vars.outputs.goarch }} go build -o ${{ steps.vars.outputs.bin_name }}
+          env GOOS=${{ steps.vars.outputs.goos }} GOARCH=${{ steps.vars.outputs.goarch }} go build -o ${{ steps.vars.outputs.full_bin_name }} .
       - name: Package Binary (unix)
         if: runner.os == 'Linux' || runner.os == 'macOS'
         id: package-unix
@@ -62,7 +68,7 @@ jobs:
         id: package-windows
         run: |
           ASSET_FILE="${{ steps.vars.outputs.bin_name }}_${{ steps.vars.outputs.goos }}_${{ steps.vars.outputs.goarch }}.${{ steps.vars.outputs.ext }}"
-          7z a "$ASSET_FILE" "${{ steps.vars.outputs.bin_name }}.exe"
+          7z a "$ASSET_FILE" "${{ steps.vars.outputs.full_bin_name }}"
           echo "asset_file=$ASSET_FILE" >> $GITHUB_OUTPUT
         shell: bash
       - name: Upload Artifact (unix)
