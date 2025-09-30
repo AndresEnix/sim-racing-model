@@ -1,15 +1,16 @@
 package model
 
 import (
-	"math"
 	"fmt"
 	"hash/fnv"
+	"log"
+	"math"
 	"time"
 	"unsafe"
 )
 
 type AccGraphicsData struct {
-	PacketId                 int32
+	PacketID                 int32
 	Status                   int32
 	Session                  int32
 	CurrentTime              [15]uint16
@@ -28,7 +29,7 @@ type AccGraphicsData struct {
 	LastSectorTime           int32
 	NumberOfLaps             int32
 	TyreCompound             [33]uint16
-	ReplayTimeMultiplier     float32 // Not used
+	ReplayTimeMultiplier     float32 // Not used.
 	NormalizedCarPosition    float32
 	ActiveCars               int32
 	AarCoordinates           [60][3]float32
@@ -99,43 +100,52 @@ type AccGraphicsData struct {
 }
 
 func (memory *AccGraphicsData) Name() string {
-	return ACC_GRAPHICS_FILE_NAME
+	return AccGraphicsFileName
 }
 
 func (memory *AccGraphicsData) Path() string {
-	return ACC_FILES_PREFIX + memory.Name()
+	return AccFilesPrefix + memory.Name()
 }
 
 func (memory *AccGraphicsData) ReadFrequency() time.Duration {
-    frequencyMs := getUint64Env(memory.Name()+READ_FREQUENCY_SUFFIX, ACC_GRAPHICS_DEFAULT_READ_FREQUENCY)
-    if frequencyMs > uint64(MAX_ALLOWED_MS) {
-        fmt.Printf("WARNING: Duration value (%d ms) from %s overflows time.Duration. Capping at MaxDuration.\n", frequencyMs, memory.Name()+READ_FREQUENCY_SUFFIX)
-        
-        return time.Duration(math.MaxInt64) 
-    }
-    return time.Duration(frequencyMs) * time.Millisecond
+	frequencyMs := getUint64Env(memory.Name()+ReadFrequencySuffix, AccGraphicsDefaultReadFrequency)
+	if frequencyMs > uint64(MaxAllowedMs) {
+		log.Printf(
+			"WARNING: Duration value (%d ms) from %s overflows time.Duration. Capping at MaxDuration.\n",
+			frequencyMs,
+			memory.Name()+ReadFrequencySuffix,
+		)
+
+		return time.Duration(math.MaxInt64)
+	}
+
+	return time.Duration(frequencyMs) * time.Millisecond
 }
 
 func (memory *AccGraphicsData) Hash() uint32 {
-	h := fnv.New32a()
-	_, err := fmt.Fprintf(h, "%d", memory.PacketId)
-	if err != nil {
-		fmt.Printf("WARNING: Failed to generate hash for %s: %s\n", memory.Name(), err.Error())
-    	return 0
+	hasher := fnv.New32a()
+	if _, err := fmt.Fprintf(hasher, "%d", memory.PacketID); err != nil {
+		log.Printf("WARNING: Failed to generate hash for %s: %s\n", memory.Name(), err.Error())
+
+		return 0
 	}
-	return h.Sum32()
+
+	return hasher.Sum32()
 }
 
-//nolint:govet
 func (memory *AccGraphicsData) MapValues(pointer uintptr) {
-	newValue := (*AccGraphicsData)(unsafe.Pointer(pointer))// #nosec
+	newValue := (*AccGraphicsData)(unsafe.Pointer(pointer))
 	*memory = *newValue
 }
 
-func (memory *AccGraphicsData) CreateMetric() Metrics {
+//nolint:funlen
+func (memory *AccGraphicsData) CreateMetric() *AccGraphicsMetrics {
 	return &AccGraphicsMetrics{
+		ID:                       "",
+		UserID:                   "",
+		SessionID:                "",
 		Timestamp:                time.Now().UTC(),
-		PacketId:                 int64(memory.PacketId),
+		PacketID:                 int64(memory.PacketID),
 		Status:                   int64(memory.Status),
 		Session:                  int64(memory.Session),
 		CurrentTime:              uint16ToString(memory.CurrentTime[:]),
@@ -156,7 +166,7 @@ func (memory *AccGraphicsData) CreateMetric() Metrics {
 		TyreCompound:             uint16ToString(memory.TyreCompound[:]),
 		NormalizedCarPosition:    float64(memory.NormalizedCarPosition),
 		ActiveCars:               int64(memory.ActiveCars),
-		AarCoordinates:           twoDimensionSliceFloat32To64(floatArray_60_3_ToSlice(memory.AarCoordinates)),
+		AarCoordinates:           twoDimensionSliceFloat32To64(floatArray60_3ToSlice(memory.AarCoordinates)),
 		CarID:                    oneDimensionSliceInt32To64(memory.CarID[:]),
 		PlayerCarID:              int64(memory.PlayerCarID),
 		PenaltyTime:              float64(memory.PenaltyTime),
@@ -221,5 +231,98 @@ func (memory *AccGraphicsData) CreateMetric() Metrics {
 		StrategyTyreSet:          int64(memory.StrategyTyreSet),
 		GapAhead:                 int64(memory.GapAhead),
 		GapBehind:                int64(memory.GapBehind),
+	}
+}
+
+//nolint:funlen
+func NewAccGraphicsData() *AccGraphicsData {
+	return &AccGraphicsData{
+		PacketID:                 0,
+		Status:                   0,
+		Session:                  0,
+		CurrentTime:              [15]uint16{},
+		LastTime:                 [15]uint16{},
+		BestTime:                 [15]uint16{},
+		Split:                    [15]uint16{},
+		CompletedLaps:            0,
+		Position:                 0,
+		ICurrentTime:             0,
+		ILastTime:                0,
+		IBestTime:                0,
+		SessionTimeLeft:          0,
+		DistanceTraveled:         0.0,
+		IsInPit:                  0,
+		CurrentSectorIndex:       0,
+		LastSectorTime:           0,
+		NumberOfLaps:             0,
+		TyreCompound:             [33]uint16{},
+		ReplayTimeMultiplier:     0.0,
+		NormalizedCarPosition:    0.0,
+		ActiveCars:               0,
+		AarCoordinates:           [60][3]float32{},
+		CarID:                    [60]int32{},
+		PlayerCarID:              0,
+		PenaltyTime:              0.0,
+		Flag:                     0,
+		Penalty:                  0,
+		IdealLineOn:              0,
+		IsInPitLane:              0,
+		SurfaceGrip:              0.0,
+		MandatoryPitDone:         0,
+		WindSpeed:                0.0,
+		WindDirection:            0.0,
+		IsSetupMenuVisible:       0,
+		MainDisplayIndex:         0,
+		SecondaryDisplayIndex:    0,
+		Tc:                       0,
+		TcCut:                    0,
+		EngineMap:                0,
+		Abs:                      0,
+		FuelXLap:                 0.0,
+		RainLights:               0,
+		FlashingLights:           0,
+		LightsStage:              0,
+		ExhaustTemperature:       0.0,
+		WiperLV:                  0,
+		DriverStintTotalTimeLeft: 0,
+		DriverStintTimeLeft:      0,
+		RainTyres:                0,
+		SessionIndex:             0,
+		UsedFuel:                 0.0,
+		DeltaLapTime:             [15]uint16{},
+		IDeltaLapTime:            0,
+		EstimatedLapTime:         [15]uint16{},
+		IEstimatedLapTime:        0,
+		IsDeltaPositive:          0,
+		ISplit:                   0,
+		IsValidLap:               0,
+		FuelEstimatedLaps:        0.0,
+		TrackStatus:              [33]uint16{},
+		MissingMandatoryPits:     0,
+		Clock:                    0.0,
+		DirectionLightsLeft:      0,
+		DirectionLightsRight:     0,
+		GlobalYellow:             0,
+		GlobalYellow1:            0,
+		GlobalYellow2:            0,
+		GlobalYellow3:            0,
+		GlobalWhite:              0,
+		GlobalGreen:              0,
+		GlobalChequered:          0,
+		GlobalRed:                0,
+		MfdTyreSet:               0,
+		MfdFuelToAdd:             0.0,
+		MfdTyrePressureLF:        0.0,
+		MfdTyrePressureRF:        0.0,
+		MfdTyrePressureLR:        0.0,
+		MfdTyrePressureRR:        0.0,
+		TrackGripStatus:          0,
+		RainIntensity:            0,
+		RainIntensityIn10min:     0,
+		RainIntensityIn30min:     0,
+		CurrentTyreSet:           0,
+		StrategyTyreSet:          0,
+		GapAhead:                 0,
+		GapBehind:                0,
 	}
 }

@@ -5,49 +5,51 @@ import (
 	"time"
 )
 
-// General constants
+// General constants.
 const (
-	READ_FREQUENCY_SUFFIX      = "_read_frequency"
-	MAX_ALLOWED_MS = math.MaxInt64 / int64(time.Millisecond)
+	ReadFrequencySuffix = "_read_frequency"
+	MaxAllowedMs        = math.MaxInt64 / int64(time.Millisecond)
 )
 
-// Game constants
+// Game constants.
 const (
-	ASSETTO_CORSA_COMPETIZIONE = "acc"
+	AssettoCorsaCompetizione = "acc"
 )
 
-// Shared memory constants
+// Shared memory constants.
 const (
-	ACC_FILES_PREFIX       = "Local\\"
-	ACC_PHYSICS_FILE_NAME  = "acpmf_physics"
-	ACC_GRAPHICS_FILE_NAME = "acpmf_graphics"
-	ACC_STATIC_FILE_NAME   = "acpmf_static"
-	ACC_PHYSICS_DEFAULT_READ_FREQUENCY = 1000
-	ACC_GRAPHICS_DEFAULT_READ_FREQUENCY = 1000
-	ACC_STATIC_DEFAULT_READ_FREQUENCY = 60000
+	AccFilesPrefix                  = "Local\\"
+	AccPhysicsFileName              = "acpmf_physics"
+	AccGraphicsFileName             = "acpmf_graphics"
+	AccStaticFileName               = "acpmf_static"
+	AccPhysicsDefaultReadFrequency  = 1000
+	AccGraphicsDefaultReadFrequency = 1000
+	AccStaticDefaultReadFrequency   = 60000
 )
 
-// Metric constants
+// Metric constants.
 const (
-	ACC_PHYSICS_METRICS_NAME  = "acpmf_physics"
-	ACC_GRAPHICS_METRICS_NAME = "acpmf_graphics"
-	ACC_STATIC_METRICS_NAME   = "acpmf_static"
+	AccPhysicsMetricsName  = "acpmf_physics"
+	AccGraphicsMetricsName = "acpmf_graphics"
+	AccStaticMetricsName   = "acpmf_static"
 )
 
-// Collections
-var (
-	gameMemoryMapping = map[string][]SharedMemoryData{
-		ASSETTO_CORSA_COMPETIZIONE: {
-			&AccPhysicsData{},
-			&AccGraphicsData{},
-			&AccStaticData{},
+func GetGameMemoryMapping() map[string][]SharedMemoryData {
+	return map[string][]SharedMemoryData{
+		AssettoCorsaCompetizione: {
+			NewAccPhysicsData(),
+			NewAccGraphicsData(),
+			NewAccStaticData(),
 		},
 	}
-	gameMetricsMapping = map[string][]Metrics{
-		ASSETTO_CORSA_COMPETIZIONE: {
-			&AccPhysicsMetrics{},
-			&AccGraphicsMetrics{},
-			&AccStaticMetrics{},
+}
+
+func GetGameMetricsMapping() map[string][]Metrics {
+	return map[string][]Metrics{
+		AssettoCorsaCompetizione: {
+			NewAccPhysicsMetrics(),
+			NewAccGraphicsMetrics(),
+			NewAccStaticMetrics(),
 		},
 	}
-)
+}

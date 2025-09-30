@@ -1,117 +1,220 @@
 package model
 
-import "time"
+import (
+	"reflect"
+	"time"
+)
 
 type AccGraphicsMetrics struct {
-	Id                       string      `json:"Id"`
-	UserId                   string      `json:"UserId"`
-	SessionId                string      `json:"SessionId"`
-	Timestamp                time.Time   `json:"Timestamp"`
-	PacketId                 int64       `json:"PacketId"`
-	Status                   int64       `json:"Status"`
-	Session                  int64       `json:"Session"`
-	CurrentTime              string      `json:"CurrentTime"`
-	LastTime                 string      `json:"LastTime"`
-	BestTime                 string      `json:"BestTime"`
-	Split                    string      `json:"Split"`
-	CompletedLaps            int64       `json:"CompletedLaps"`
-	Position                 int64       `json:"Position"`
-	ICurrentTime             int64       `json:"ICurrentTime"`
-	ILastTime                int64       `json:"ILastTime"`
-	IBestTime                int64       `json:"IBestTime"`
-	SessionTimeLeft          float64     `json:"SessionTimeLeft"`
-	DistanceTraveled         float64     `json:"DistanceTraveled"`
-	IsInPit                  int64       `json:"IsInPit"`
-	CurrentSectorIndex       int64       `json:"CurrentSectorIndex"`
-	LastSectorTime           int64       `json:"LastSectorTime"`
-	NumberOfLaps             int64       `json:"NumberOfLaps"`
-	TyreCompound             string      `json:"TyreCompound"`
-	NormalizedCarPosition    float64     `json:"NormalizedCarPosition"`
-	ActiveCars               int64       `json:"ActiveCars"`
-	AarCoordinates           [][]float64 `json:"AarCoordinates"`
-	CarID                    []int64     `json:"CarID"`
-	PlayerCarID              int64       `json:"PlayerCarID"`
-	PenaltyTime              float64     `json:"PenaltyTime"`
-	Flag                     int64       `json:"Flag"`
-	Penalty                  int64       `json:"Penalty"`
-	IdealLineOn              int64       `json:"IdealLineOn"`
-	IsInPitLane              int64       `json:"IsInPitLane"`
-	SurfaceGrip              float64     `json:"SurfaceGrip"`
-	MandatoryPitDone         int64       `json:"MandatoryPitDone"`
-	WindSpeed                float64     `json:"WindSpeed"`
-	WindDirection            float64     `json:"WindDirection"`
-	IsSetupMenuVisible       int64       `json:"IsSetupMenuVisible"`
-	MainDisplayIndex         int64       `json:"MainDisplayIndex"`
-	SecondaryDisplayIndex    int64       `json:"SecondaryDisplayIndex"`
-	Tc                       int64       `json:"Tc"`
-	TcCut                    int64       `json:"TcCut"`
-	EngineMap                int64       `json:"EngineMap"`
-	Abs                      int64       `json:"Abs"`
-	FuelXLap                 float64     `json:"FuelXLap"`
-	RainLights               int64       `json:"RainLights"`
-	FlashingLights           int64       `json:"FlashingLights"`
-	LightsStage              int64       `json:"LightsStage"`
-	ExhaustTemperature       float64     `json:"ExhaustTemperature"`
-	WiperLV                  int64       `json:"WiperLV"`
-	DriverStintTotalTimeLeft int64       `json:"DriverStintTotalTimeLeft"`
-	DriverStintTimeLeft      int64       `json:"DriverStintTimeLeft"`
-	RainTyres                int64       `json:"RainTyres"`
-	SessionIndex             int64       `json:"SessionIndex"`
-	UsedFuel                 float64     `json:"UsedFuel"`
-	DeltaLapTime             string      `json:"DeltaLapTime"`
-	IDeltaLapTime            int64       `json:"IDeltaLapTime"`
-	EstimatedLapTime         string      `json:"EstimatedLapTime"`
-	IEstimatedLapTime        int64       `json:"IEstimatedLapTime"`
-	IsDeltaPositive          int64       `json:"IsDeltaPositive"`
-	ISplit                   int64       `json:"ISplit"`
-	IsValidLap               int64       `json:"IsValidLap"`
-	FuelEstimatedLaps        float64     `json:"FuelEstimatedLaps"`
-	TrackStatus              string      `json:"TrackStatus"`
-	MissingMandatoryPits     int64       `json:"MissingMandatoryPits"`
-	Clock                    float64     `json:"Clock"`
-	DirectionLightsLeft      int64       `json:"DirectionLightsLeft"`
-	DirectionLightsRight     int64       `json:"DirectionLightsRight"`
-	GlobalYellow             int64       `json:"GlobalYellow"`
-	GlobalYellow1            int64       `json:"GlobalYellow1"`
-	GlobalYellow2            int64       `json:"GlobalYellow2"`
-	GlobalYellow3            int64       `json:"GlobalYellow3"`
-	GlobalWhite              int64       `json:"GlobalWhite"`
-	GlobalGreen              int64       `json:"GlobalGreen"`
-	GlobalChequered          int64       `json:"GlobalChequered"`
-	GlobalRed                int64       `json:"GlobalRed"`
-	MfdTyreSet               int64       `json:"MfdTyreSet"`
-	MfdFuelToAdd             float64     `json:"MfdFuelToAdd"`
-	MfdTyrePressureLF        float64     `json:"MfdTyrePressureLF"`
-	MfdTyrePressureRF        float64     `json:"MfdTyrePressureRF"`
-	MfdTyrePressureLR        float64     `json:"MfdTyrePressureLR"`
-	MfdTyrePressureRR        float64     `json:"MfdTyrePressureRR"`
-	TrackGripStatus          int64       `json:"TrackGripStatus"`
-	RainIntensity            int64       `json:"RainIntensity"`
-	RainIntensityIn10min     int64       `json:"RainIntensityIn10min"`
-	RainIntensityIn30min     int64       `json:"RainIntensityIn30min"`
-	CurrentTyreSet           int64       `json:"CurrentTyreSet"`
-	StrategyTyreSet          int64       `json:"StrategyTyreSet"`
-	GapAhead                 int64       `json:"GapAhead"`
-	GapBehind                int64       `json:"GapBehind"`
+	ID                       string      `json:"id"`
+	UserID                   string      `json:"userId"`
+	SessionID                string      `json:"sessionId"`
+	Timestamp                time.Time   `json:"timestamp"`
+	PacketID                 int64       `json:"packetId"`
+	Status                   int64       `json:"status"`
+	Session                  int64       `json:"session"`
+	CurrentTime              string      `json:"currentTime"`
+	LastTime                 string      `json:"lastTime"`
+	BestTime                 string      `json:"bestTime"`
+	Split                    string      `json:"split"`
+	CompletedLaps            int64       `json:"completedLaps"`
+	Position                 int64       `json:"position"`
+	ICurrentTime             int64       `json:"iCurrentTime"`
+	ILastTime                int64       `json:"iLastTime"`
+	IBestTime                int64       `json:"iBestTime"`
+	SessionTimeLeft          float64     `json:"sessionTimeLeft"`
+	DistanceTraveled         float64     `json:"distanceTraveled"`
+	IsInPit                  int64       `json:"isInPit"`
+	CurrentSectorIndex       int64       `json:"currentSectorIndex"`
+	LastSectorTime           int64       `json:"lastSectorTime"`
+	NumberOfLaps             int64       `json:"numberOfLaps"`
+	TyreCompound             string      `json:"tyreCompound"`
+	NormalizedCarPosition    float64     `json:"normalizedCarPosition"`
+	ActiveCars               int64       `json:"activeCars"`
+	AarCoordinates           [][]float64 `json:"aarCoordinates"`
+	CarID                    []int64     `json:"carId"`
+	PlayerCarID              int64       `json:"playerCarId"`
+	PenaltyTime              float64     `json:"penaltyTime"`
+	Flag                     int64       `json:"flag"`
+	Penalty                  int64       `json:"penalty"`
+	IdealLineOn              int64       `json:"idealLineOn"`
+	IsInPitLane              int64       `json:"isInPitLane"`
+	SurfaceGrip              float64     `json:"surfaceGrip"`
+	MandatoryPitDone         int64       `json:"mandatoryPitDone"`
+	WindSpeed                float64     `json:"windSpeed"`
+	WindDirection            float64     `json:"windDirection"`
+	IsSetupMenuVisible       int64       `json:"isSetupMenuVisible"`
+	MainDisplayIndex         int64       `json:"mainDisplayIndex"`
+	SecondaryDisplayIndex    int64       `json:"secondaryDisplayIndex"`
+	Tc                       int64       `json:"tc"`
+	TcCut                    int64       `json:"tcCut"`
+	EngineMap                int64       `json:"engineMap"`
+	Abs                      int64       `json:"abs"`
+	FuelXLap                 float64     `json:"fuelXLap"`
+	RainLights               int64       `json:"rainLights"`
+	FlashingLights           int64       `json:"flashingLights"`
+	LightsStage              int64       `json:"lightsStage"`
+	ExhaustTemperature       float64     `json:"exhaustTemperature"`
+	WiperLV                  int64       `json:"wiperLv"`
+	DriverStintTotalTimeLeft int64       `json:"driverStintTotalTimeLeft"`
+	DriverStintTimeLeft      int64       `json:"driverStintTimeLeft"`
+	RainTyres                int64       `json:"rainTyres"`
+	SessionIndex             int64       `json:"sessionIndex"`
+	UsedFuel                 float64     `json:"usedFuel"`
+	DeltaLapTime             string      `json:"deltaLapTime"`
+	IDeltaLapTime            int64       `json:"iDeltaLapTime"`
+	EstimatedLapTime         string      `json:"estimatedLapTime"`
+	IEstimatedLapTime        int64       `json:"iEstimatedLapTime"`
+	IsDeltaPositive          int64       `json:"isDeltaPositive"`
+	ISplit                   int64       `json:"iSplit"`
+	IsValidLap               int64       `json:"isValidLap"`
+	FuelEstimatedLaps        float64     `json:"fuelEstimatedLaps"`
+	TrackStatus              string      `json:"trackStatus"`
+	MissingMandatoryPits     int64       `json:"missingMandatoryPits"`
+	Clock                    float64     `json:"clock"`
+	DirectionLightsLeft      int64       `json:"directionLightsLeft"`
+	DirectionLightsRight     int64       `json:"directionLightsRight"`
+	GlobalYellow             int64       `json:"globalYellow"`
+	GlobalYellow1            int64       `json:"globalYellow1"`
+	GlobalYellow2            int64       `json:"globalYellow2"`
+	GlobalYellow3            int64       `json:"globalYellow3"`
+	GlobalWhite              int64       `json:"globalWhite"`
+	GlobalGreen              int64       `json:"globalGreen"`
+	GlobalChequered          int64       `json:"globalChequered"`
+	GlobalRed                int64       `json:"globalRed"`
+	MfdTyreSet               int64       `json:"mfdTyreSet"`
+	MfdFuelToAdd             float64     `json:"mfdFuelToAdd"`
+	MfdTyrePressureLF        float64     `json:"mfdTyrePressureLf"`
+	MfdTyrePressureRF        float64     `json:"mfdTyrePressureRf"`
+	MfdTyrePressureLR        float64     `json:"mfdTyrePressureLr"`
+	MfdTyrePressureRR        float64     `json:"mfdTyrePressureRr"`
+	TrackGripStatus          int64       `json:"trackGripStatus"`
+	RainIntensity            int64       `json:"rainIntensity"`
+	RainIntensityIn10min     int64       `json:"rainIntensityIn10min"`
+	RainIntensityIn30min     int64       `json:"rainIntensityIn30min"`
+	CurrentTyreSet           int64       `json:"currentTyreSet"`
+	StrategyTyreSet          int64       `json:"strategyTyreSet"`
+	GapAhead                 int64       `json:"gapAhead"`
+	GapBehind                int64       `json:"gapBehind"`
 }
 
 func (metric *AccGraphicsMetrics) Game() string {
-	return ASSETTO_CORSA_COMPETIZIONE
+	return AssettoCorsaCompetizione
 }
 
 func (metric *AccGraphicsMetrics) Name() string {
-	return ACC_GRAPHICS_METRICS_NAME
+	return AccGraphicsMetricsName
 }
 
 func (metric *AccGraphicsMetrics) DataPoints() []string {
-	return getStructFieldNames(*metric)
+	v := reflect.ValueOf(metric)
+	t := v.Type()
+
+	fieldNames := make([]string, 0, v.NumField())
+	for i := range v.NumField() {
+		fieldNames = append(fieldNames, t.Field(i).Name)
+	}
+
+	return fieldNames
 }
 
-func (metric *AccGraphicsMetrics) AddSessionInfo(userId, sessionId string) {
-	metric.UserId = userId
-	metric.SessionId = sessionId
+func (metric *AccGraphicsMetrics) AddSessionInfo(userID, sessionID string) {
+	metric.UserID = userID
+	metric.SessionID = sessionID
 }
 
-func (metric *AccGraphicsMetrics) New() Metrics {
-	return &AccGraphicsMetrics{}
+//nolint:funlen
+func NewAccGraphicsMetrics() *AccGraphicsMetrics {
+	return &AccGraphicsMetrics{
+		ID:                       "",
+		UserID:                   "",
+		SessionID:                "",
+		Timestamp:                time.Time{},
+		PacketID:                 0,
+		Status:                   0,
+		Session:                  0,
+		CurrentTime:              "",
+		LastTime:                 "",
+		BestTime:                 "",
+		Split:                    "",
+		CompletedLaps:            0,
+		Position:                 0,
+		ICurrentTime:             0,
+		ILastTime:                0,
+		IBestTime:                0,
+		SessionTimeLeft:          0,
+		DistanceTraveled:         0.0,
+		IsInPit:                  0,
+		CurrentSectorIndex:       0,
+		LastSectorTime:           0,
+		NumberOfLaps:             0,
+		TyreCompound:             "",
+		NormalizedCarPosition:    0.0,
+		ActiveCars:               0,
+		AarCoordinates:           make([][]float64, 0),
+		CarID:                    make([]int64, 0),
+		PlayerCarID:              0,
+		PenaltyTime:              0.0,
+		Flag:                     0,
+		Penalty:                  0,
+		IdealLineOn:              0,
+		IsInPitLane:              0,
+		SurfaceGrip:              0.0,
+		MandatoryPitDone:         0,
+		WindSpeed:                0.0,
+		WindDirection:            0.0,
+		IsSetupMenuVisible:       0,
+		MainDisplayIndex:         0,
+		SecondaryDisplayIndex:    0,
+		Tc:                       0,
+		TcCut:                    0,
+		EngineMap:                0,
+		Abs:                      0,
+		FuelXLap:                 0.0,
+		RainLights:               0,
+		FlashingLights:           0,
+		LightsStage:              0,
+		ExhaustTemperature:       0.0,
+		WiperLV:                  0,
+		DriverStintTotalTimeLeft: 0,
+		DriverStintTimeLeft:      0,
+		RainTyres:                0,
+		SessionIndex:             0,
+		UsedFuel:                 0.0,
+		DeltaLapTime:             "",
+		IDeltaLapTime:            0,
+		EstimatedLapTime:         "",
+		IEstimatedLapTime:        0,
+		IsDeltaPositive:          0,
+		ISplit:                   0,
+		IsValidLap:               0,
+		FuelEstimatedLaps:        0.0,
+		TrackStatus:              "",
+		MissingMandatoryPits:     0,
+		Clock:                    0.0,
+		DirectionLightsLeft:      0,
+		DirectionLightsRight:     0,
+		GlobalYellow:             0,
+		GlobalYellow1:            0,
+		GlobalYellow2:            0,
+		GlobalYellow3:            0,
+		GlobalWhite:              0,
+		GlobalGreen:              0,
+		GlobalChequered:          0,
+		GlobalRed:                0,
+		MfdTyreSet:               0,
+		MfdFuelToAdd:             0.0,
+		MfdTyrePressureLF:        0.0,
+		MfdTyrePressureRF:        0.0,
+		MfdTyrePressureLR:        0.0,
+		MfdTyrePressureRR:        0.0,
+		TrackGripStatus:          0,
+		RainIntensity:            0,
+		RainIntensityIn10min:     0,
+		RainIntensityIn30min:     0,
+		CurrentTyreSet:           0,
+		StrategyTyreSet:          0,
+		GapAhead:                 0,
+		GapBehind:                0,
+	}
 }

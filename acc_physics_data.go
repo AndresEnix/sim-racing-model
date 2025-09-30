@@ -1,15 +1,16 @@
 package model
 
 import (
-	"math"
 	"fmt"
 	"hash/fnv"
+	"log"
+	"math"
 	"time"
 	"unsafe"
 )
 
 type AccPhysicsData struct {
-	PacketId            int32
+	PacketID            int32
 	Gas                 float32
 	Brake               float32
 	Fuel                float32
@@ -20,67 +21,67 @@ type AccPhysicsData struct {
 	Velocity            [3]float32
 	AccG                [3]float32
 	WheelSlip           [4]float32
-	WheelLoad           [4]float32 // Not used
+	WheelLoad           [4]float32 // Not used.
 	WheelPressure       [4]float32
 	WheelAngularSpeed   [4]float32
-	TyreWear            [4]float32 // Not used
-	TyreDirtyLevel      [4]float32 // Not used
+	TyreWear            [4]float32 // Not used.
+	TyreDirtyLevel      [4]float32 // Not used.
 	TyreCoreTemperature [4]float32
-	CamberRAD           [4]float32 // Not used
+	CamberRAD           [4]float32 // Not used.
 	SuspensionTravel    [4]float32
-	DRS                 float32 // Not used
+	DRS                 float32 // Not used.
 	TC                  float32
 	Heading             float32
 	Pitch               float32
 	Roll                float32
-	CgHeight            float32 // Not used
+	CgHeight            float32 // Not used.
 	CarDamage           [5]float32
-	NumberOfTyresOut    int32 // Not used
+	NumberOfTyresOut    int32 // Not used.
 	PitLimiterOn        int32
 	Abs                 float32
-	KersCharge          float32 // Not used
-	KersInput           float32 // Not used
+	KersCharge          float32 // Not used.
+	KersInput           float32 // Not used.
 	AutoShifterOn       int32
-	RideHeight          [2]float32 // Not used
+	RideHeight          [2]float32 // Not used.
 	TurboBoost          float32
-	Ballast             float32 // Not used
-	AirDensity          float32 // Not used
+	Ballast             float32 // Not used.
+	AirDensity          float32 // Not used.
 	AirTemp             float32
 	RoadTemp            float32
 	LocalAngularVel     [3]float32
 	FinalFF             float32
-	PerformanceMeter    float32 // Not used
-	EngineBrake         int32   // Not used
-	ErsRecoveryLevel    int32   // Not used
-	ErsPowerLevel       int32   // Not used
-	ErsHeatCharging     int32   // Not used
-	ErsIsCharging       int32   // Not used
-	KersCurrentKJ       float32 // Not used
-	DrsAvailable        int32   // Not used
-	DrsEnabled          int32   // Not used
+	PerformanceMeter    float32 // Not used.
+	EngineBrake         int32   // Not used.
+	ErsRecoveryLevel    int32   // Not used.
+	ErsPowerLevel       int32   // Not used.
+	ErsHeatCharging     int32   // Not used.
+	ErsIsCharging       int32   // Not used.
+	KersCurrentKJ       float32 // Not used.
+	DrsAvailable        int32   // Not used.
+	DrsEnabled          int32   // Not used.
 	BrakeTemp           [4]float32
 	Clutch              float32
-	TyreTempI           [4]float32 // Not used
-	TyreTempM           [4]float32 // Not used
-	TyreTempO           [4]float32 // Not used
+	TyreTempI           [4]float32 // Not used.
+	TyreTempM           [4]float32 // Not used.
+	TyreTempO           [4]float32 // Not used.
 	IsAIControlled      int32
 	TyreContactPoint    [4][3]float32
 	TyreContactNormal   [4][3]float32
 	TyreContactHeading  [4][3]float32
 	BrakeBias           float32
 	LocalVelocity       [3]float32
-	P2PActivation       int32      // Not used
-	P2PStatus           int32      // Not used
-	CurrentMaxRpm       float32    // Not used
-	MZ                  [4]float32 // Not used
-	FX                  [4]float32 // Not used
-	FY                  [4]float32 // Not used
+	P2PActivation       int32      // Not used.
+	P2PStatus           int32      // Not used.
+	CurrentMaxRpm       float32    // Not used.
+	MZ                  [4]float32 // Not used.
+	FX                  [4]float32 // Not used.
+	FY                  [4]float32 // Not used.
 	SlipRatio           [4]float32
 	SlipAngle           [4]float32
-	TcInAction          int32      // Not used
-	AbsInAction         int32      // Not used
-	SuspensionDamage    [4]float32 // Not used
-	TyreTemp            [4]float32 // Not used
+	TcInAction          int32      // Not used.
+	AbsInAction         int32      // Not used.
+	SuspensionDamage    [4]float32 // Not used.
+	TyreTemp            [4]float32 // Not used.
 	WaterTemp           float32
 	BrakePressure       [4]float32
 	FrontBrakeCompound  int32
@@ -97,45 +98,51 @@ type AccPhysicsData struct {
 }
 
 func (memory *AccPhysicsData) Name() string {
-	return ACC_PHYSICS_FILE_NAME
+	return AccPhysicsFileName
 }
 
 func (memory *AccPhysicsData) Path() string {
-	return ACC_FILES_PREFIX + memory.Name()
+	return AccFilesPrefix + memory.Name()
 }
 
 func (memory *AccPhysicsData) ReadFrequency() time.Duration {
-    frequencyMs := getUint64Env(memory.Name()+READ_FREQUENCY_SUFFIX, ACC_PHYSICS_DEFAULT_READ_FREQUENCY)
-    if frequencyMs > uint64(MAX_ALLOWED_MS) {
-        fmt.Printf("WARNING: Duration value (%d ms) from %s overflows time.Duration. Capping at MaxDuration.\n", frequencyMs, memory.Name()+READ_FREQUENCY_SUFFIX)
-        return time.Duration(math.MaxInt64) 
-    }
+	frequencyMs := getUint64Env(memory.Name()+ReadFrequencySuffix, AccPhysicsDefaultReadFrequency)
+	if frequencyMs > uint64(MaxAllowedMs) {
+		log.Printf(
+			"WARNING: Duration value (%d ms) from %s overflows time.Duration. Capping at MaxDuration.\n",
+			frequencyMs,
+			memory.Name()+ReadFrequencySuffix,
+		)
 
-    // 3. Safe conversion (uint64 to int64) and multiplication.
-    // This is the original line, now executed only when the value is safe.
-    return time.Duration(frequencyMs) * time.Millisecond
+		return time.Duration(math.MaxInt64)
+	}
+
+	return time.Duration(frequencyMs) * time.Millisecond
 }
 
 func (memory *AccPhysicsData) Hash() uint32 {
-	h := fnv.New32a()
-	_, err := fmt.Fprintf(h, "%d", memory.PacketId)
-	if err != nil {
-		fmt.Printf("WARNING: Failed to generate hash for %s: %s\n", memory.Name(), err.Error())
-    	return 0
+	hasher := fnv.New32a()
+	if _, err := fmt.Fprintf(hasher, "%d", memory.PacketID); err != nil {
+		log.Printf("WARNING: Failed to generate hash for %s: %s\n", memory.Name(), err.Error())
+
+		return 0
 	}
-	return h.Sum32()
+
+	return hasher.Sum32()
 }
 
-//nolint:govet
 func (memory *AccPhysicsData) MapValues(pointer uintptr) {
-	newValue := (*AccPhysicsData)(unsafe.Pointer(pointer))// #nosec
+	newValue := (*AccPhysicsData)(unsafe.Pointer(pointer))
 	*memory = *newValue
 }
 
-func (memory *AccPhysicsData) CreateMetric() Metrics {
+func (memory *AccPhysicsData) CreateMetric() *AccPhysicsMetrics {
 	return &AccPhysicsMetrics{
+		ID:                  "",
+		UserID:              "",
+		SessionID:           "",
 		Timestamp:           time.Now().UTC(),
-		PacketId:            int64(memory.PacketId),
+		PacketID:            int64(memory.PacketID),
 		Gas:                 float64(memory.Gas),
 		Brake:               float64(memory.Brake),
 		Fuel:                float64(memory.Fuel),
@@ -166,9 +173,9 @@ func (memory *AccPhysicsData) CreateMetric() Metrics {
 		BrakeTemp:           oneDimensionSliceFloat32To64(memory.BrakeTemp[:]),
 		Clutch:              float64(memory.Clutch),
 		IsAIControlled:      int64(memory.IsAIControlled),
-		TyreContactPoint:    twoDimensionSliceFloat32To64(floatArray_4_3_ToSlice(memory.TyreContactPoint)),
-		TyreContactNormal:   twoDimensionSliceFloat32To64(floatArray_4_3_ToSlice(memory.TyreContactNormal)),
-		TyreContactHeading:  twoDimensionSliceFloat32To64(floatArray_4_3_ToSlice(memory.TyreContactHeading)),
+		TyreContactPoint:    twoDimensionSliceFloat32To64(floatArray4_3ToSlice(memory.TyreContactPoint)),
+		TyreContactNormal:   twoDimensionSliceFloat32To64(floatArray4_3ToSlice(memory.TyreContactNormal)),
+		TyreContactHeading:  twoDimensionSliceFloat32To64(floatArray4_3ToSlice(memory.TyreContactHeading)),
 		BrakeBias:           float64(memory.BrakeBias),
 		LocalVelocity:       oneDimensionSliceFloat32To64(memory.LocalVelocity[:]),
 		SlipRatio:           oneDimensionSliceFloat32To64(memory.SlipRatio[:]),
@@ -186,5 +193,96 @@ func (memory *AccPhysicsData) CreateMetric() Metrics {
 		SlipVibrations:      float64(memory.SlipVibrations),
 		GVibrations:         float64(memory.GVibrations),
 		AbsVibrations:       float64(memory.AbsVibrations),
+	}
+}
+
+//nolint:funlen
+func NewAccPhysicsData() *AccPhysicsData {
+	return &AccPhysicsData{
+		PacketID:            0,
+		Gas:                 0.0,
+		Brake:               0.0,
+		Fuel:                0.0,
+		Gear:                0,
+		RPM:                 0,
+		SteerAngle:          0.0,
+		SpeedKmh:            0.0,
+		Velocity:            [3]float32{},
+		AccG:                [3]float32{},
+		WheelSlip:           [4]float32{},
+		WheelLoad:           [4]float32{},
+		WheelPressure:       [4]float32{},
+		WheelAngularSpeed:   [4]float32{},
+		TyreWear:            [4]float32{},
+		TyreDirtyLevel:      [4]float32{},
+		TyreCoreTemperature: [4]float32{},
+		CamberRAD:           [4]float32{},
+		SuspensionTravel:    [4]float32{},
+		DRS:                 0.0,
+		TC:                  0.0,
+		Heading:             0.0,
+		Pitch:               0.0,
+		Roll:                0.0,
+		CgHeight:            0.0,
+		CarDamage:           [5]float32{},
+		NumberOfTyresOut:    0,
+		PitLimiterOn:        0,
+		Abs:                 0.0,
+		KersCharge:          0.0,
+		KersInput:           0.0,
+		AutoShifterOn:       0,
+		RideHeight:          [2]float32{},
+		TurboBoost:          0.0,
+		Ballast:             0.0,
+		AirDensity:          0.0,
+		AirTemp:             0.0,
+		RoadTemp:            0.0,
+		LocalAngularVel:     [3]float32{},
+		FinalFF:             0.0,
+		PerformanceMeter:    0.0,
+		EngineBrake:         0,
+		ErsRecoveryLevel:    0,
+		ErsPowerLevel:       0,
+		ErsHeatCharging:     0,
+		ErsIsCharging:       0,
+		KersCurrentKJ:       0.0,
+		DrsAvailable:        0,
+		DrsEnabled:          0,
+		BrakeTemp:           [4]float32{},
+		Clutch:              0.0,
+		TyreTempI:           [4]float32{},
+		TyreTempM:           [4]float32{},
+		TyreTempO:           [4]float32{},
+		IsAIControlled:      0,
+		TyreContactPoint:    [4][3]float32{},
+		TyreContactNormal:   [4][3]float32{},
+		TyreContactHeading:  [4][3]float32{},
+		BrakeBias:           0.0,
+		LocalVelocity:       [3]float32{},
+		P2PActivation:       0,
+		P2PStatus:           0,
+		CurrentMaxRpm:       0.0,
+		MZ:                  [4]float32{},
+		FX:                  [4]float32{},
+		FY:                  [4]float32{},
+		SlipRatio:           [4]float32{},
+		SlipAngle:           [4]float32{},
+		TcInAction:          0,
+		AbsInAction:         0,
+		SuspensionDamage:    [4]float32{},
+		TyreTemp:            [4]float32{},
+		WaterTemp:           0.0,
+		BrakePressure:       [4]float32{},
+		FrontBrakeCompound:  0,
+		RearBrakeCompound:   0,
+		PadLife:             [4]float32{},
+		DiscLife:            [4]float32{},
+		IgnitionOn:          0,
+		StarterEngineOn:     0,
+		IsEngineRunning:     0,
+		KerbVibration:       0.0,
+		SlipVibrations:      0.0,
+		GVibrations:         0.0,
+		AbsVibrations:       0.0,
 	}
 }
