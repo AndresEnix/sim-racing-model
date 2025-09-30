@@ -92,6 +92,8 @@ jobs:
     outputs:
       new_tag: ${{ steps.tagger.outputs.new_tag }}
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
       - name: Calculate and Create Tag
         id: tagger
         uses: anothrNick/github-tag-action@v1 
