@@ -32,6 +32,8 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version: 'stable'
+      - name: Run Gosec Security Scanner
+        uses: securego/gosec@master
       - name: Build and Set Variables
         id: vars
         run: |
