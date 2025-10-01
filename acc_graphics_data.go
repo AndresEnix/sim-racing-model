@@ -1,7 +1,6 @@
 package model
 
 import (
-	"encoding/json"
 	"fmt"
 	"hash/fnv"
 	"log"
@@ -101,7 +100,6 @@ type AccGraphicsData struct {
 	GapBehind                int32
 }
 
-//nolint:funlen
 // NewAccGraphicsData creates a new instance of AccGraphicsData with default values.
 func NewAccGraphicsData() *AccGraphicsData {
 	return &AccGraphicsData{
@@ -235,17 +233,17 @@ func (memory *AccGraphicsData) Hash() uint32 {
 	return hasher.Sum32()
 }
 
-//nolint:gosec
 // MapValues maps the values from a memory pointer to the AccGraphicsData struct.
+//
+//nolint:gosec
 func (memory *AccGraphicsData) MapValues(pointer uintptr) {
 	newValue := (*AccGraphicsData)(unsafe.Pointer(pointer)) //nolint:govet
 	*memory = *newValue
 }
 
-//nolint:funlen
 // CreateMetricsJSON creates JSON bytes from the current AccPhysicsData.
-func (memory *AccGraphicsData) CreateMetricsJSON() []byte {
-	accGraphicsMetrics := &AccGraphicsMetrics{
+func (memory *AccGraphicsData) CreateMetricsJSON() Metrics {
+	return &AccGraphicsMetrics{
 		ID:                       "",
 		UserID:                   "",
 		SessionID:                "",
@@ -337,13 +335,4 @@ func (memory *AccGraphicsData) CreateMetricsJSON() []byte {
 		GapAhead:                 int64(memory.GapAhead),
 		GapBehind:                int64(memory.GapBehind),
 	}
-
-	metrics, err := json.Marshal(accGraphicsMetrics)
-	if err != nil {
-		log.Println("failed to marshal AccGraphicsData to JSON: %w", err)
-
-		return nil
-	}
-
-	return metrics
 }

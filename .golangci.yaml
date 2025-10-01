@@ -7,3 +7,5 @@ linters:
     ireturn:
       allow:
         - model.Metrics
+    funlen:
+      lines: 100

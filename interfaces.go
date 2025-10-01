@@ -9,7 +9,7 @@ type SharedMemoryData interface {
 	ReadFrequency() time.Duration
 	Hash() uint32
 	MapValues(pointer uintptr)
-	CreateMetricsJSON() []byte
+	CreateMetricsJSON() Metrics
 }
 
 // Metrics defines the interface for metrics configurations.

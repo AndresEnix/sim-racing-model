@@ -1,7 +1,6 @@
 package model
 
 import (
-	"encoding/json"
 	"fmt"
 	"hash/fnv"
 	"log"
@@ -188,16 +187,17 @@ func (memory *AccStaticData) Hash() uint32 {
 	return hasher.Sum32()
 }
 
-//nolint:gosec
 // MapValues maps the values from a memory pointer to the AccStaticData struct.
+//
+//nolint:gosec
 func (memory *AccStaticData) MapValues(pointer uintptr) {
 	newValue := (*AccStaticData)(unsafe.Pointer(pointer)) //nolint:govet
 	*memory = *newValue
 }
 
 // CreateMetricsJSON creates JSON bytes from the current AccStaticData.
-func (memory *AccStaticData) CreateMetricsJSON() []byte {
-	accStaticMetrics := &AccStaticMetrics{
+func (memory *AccStaticData) CreateMetricsJSON() Metrics {
+	return &AccStaticMetrics{
 		ID:                  "",
 		UserID:              "",
 		SessionID:           "",
@@ -228,13 +228,4 @@ func (memory *AccStaticData) CreateMetricsJSON() []byte {
 		DryTyresName:        uint16ToString(memory.DryTyresName[:]),
 		WetTyresName:        uint16ToString(memory.WetTyresName[:]),
 	}
-
-	metrics, err := json.Marshal(accStaticMetrics)
-	if err != nil {
-		log.Println("failed to marshal AccGraphicsData to JSON: %w", err)
-
-		return nil
-	}
-
-	return metrics
 }

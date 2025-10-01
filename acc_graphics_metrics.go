@@ -99,7 +99,6 @@ type AccGraphicsMetrics struct {
 	GapBehind                int64       `json:"gapBehind"`
 }
 
-//nolint:funlen
 // NewAccGraphicsMetrics creates a new AccGraphicsMetrics struct with default values.
 func NewAccGraphicsMetrics() *AccGraphicsMetrics {
 	return &AccGraphicsMetrics{
@@ -213,15 +212,27 @@ func (metric *AccGraphicsMetrics) Name() string {
 
 // DataPoints returns the field names of the AccGraphicsMetrics struct.
 func (metric *AccGraphicsMetrics) DataPoints() []string {
-	v := reflect.ValueOf(metric)
-	t := v.Type()
+	metricType := reflect.TypeOf(metric)
 
-	fieldNames := make([]string, 0, v.NumField())
-	for i := range v.NumField() {
-		fieldNames = append(fieldNames, t.Field(i).Name)
+	if metricType.Kind() == reflect.Ptr {
+		metricType = metricType.Elem()
 	}
 
-	return fieldNames
+	if metricType.Kind() != reflect.Struct {
+		return []string{}
+	}
+
+	var names []string
+
+	for i := range metricType.NumField() {
+		field := metricType.Field(i)
+
+		if field.IsExported() {
+			names = append(names, field.Name)
+		}
+	}
+
+	return names
 }
 
 // AddSessionInfo adds the user ID and session ID to the metric.
