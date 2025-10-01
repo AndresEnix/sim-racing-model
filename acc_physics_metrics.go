@@ -1,11 +1,9 @@
 package model
 
-
 import (
 	"reflect"
 	"time"
 )
-
 
 // AccPhysicsMetrics is the name of the AccPhysics metrics.
 type AccPhysicsMetrics struct {
@@ -65,7 +63,6 @@ type AccPhysicsMetrics struct {
 	GVibrations         float64     `json:"gVibrations"`
 	AbsVibrations       float64     `json:"absVibrations"`
 }
-
 
 // NewAccPhysicsMetrics creates a new AccPhysicsMetrics struct with default values.
 func NewAccPhysicsMetrics() *AccPhysicsMetrics {
@@ -128,18 +125,20 @@ func NewAccPhysicsMetrics() *AccPhysicsMetrics {
 	}
 }
 
+// New creates a new AccPhysicsMetrics struct with default values.
+func (metric *AccPhysicsMetrics) New() Metrics {
+	return NewAccPhysicsMetrics()
+}
 
 // Game returns the name of the game for the AccPhysicsMetrics metric.
 func (metric *AccPhysicsMetrics) Game() string {
 	return AssettoCorsaCompetizione
 }
 
-
 // Name returns the name of the AccPhysicsMetrics metric.
 func (metric *AccPhysicsMetrics) Name() string {
 	return AccPhysicsMetricsName
 }
-
 
 // DataPoints returns the field names of the AccPhysicsMetrics struct.
 func (metric *AccPhysicsMetrics) DataPoints() []string {
@@ -153,7 +152,6 @@ func (metric *AccPhysicsMetrics) DataPoints() []string {
 
 	return fieldNames
 }
-
 
 // AddSessionInfo adds the user ID and session ID to the metric.
 func (metric *AccPhysicsMetrics) AddSessionInfo(userID, sessionID string) {

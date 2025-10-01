@@ -1,11 +1,9 @@
 package model
 
-
 import (
 	"reflect"
 	"time"
 )
-
 
 // AccGraphicsMetrics is the name of the AccGraphics metrics.
 type AccGraphicsMetrics struct {
@@ -100,7 +98,6 @@ type AccGraphicsMetrics struct {
 	GapAhead                 int64       `json:"gapAhead"`
 	GapBehind                int64       `json:"gapBehind"`
 }
-
 
 //nolint:funlen
 // NewAccGraphicsMetrics creates a new AccGraphicsMetrics struct with default values.
@@ -199,18 +196,20 @@ func NewAccGraphicsMetrics() *AccGraphicsMetrics {
 	}
 }
 
+// New creates a new AccGraphicsMetrics struct with default values.
+func (metric *AccGraphicsMetrics) New() Metrics {
+	return NewAccGraphicsMetrics()
+}
 
 // Game returns the name of the game for the AccGraphicsMetrics metric.
 func (metric *AccGraphicsMetrics) Game() string {
 	return AssettoCorsaCompetizione
 }
 
-
 // Name returns the name of the AccGraphicsMetrics metric.
 func (metric *AccGraphicsMetrics) Name() string {
 	return AccGraphicsMetricsName
 }
-
 
 // DataPoints returns the field names of the AccGraphicsMetrics struct.
 func (metric *AccGraphicsMetrics) DataPoints() []string {
@@ -224,7 +223,6 @@ func (metric *AccGraphicsMetrics) DataPoints() []string {
 
 	return fieldNames
 }
-
 
 // AddSessionInfo adds the user ID and session ID to the metric.
 func (metric *AccGraphicsMetrics) AddSessionInfo(userID, sessionID string) {

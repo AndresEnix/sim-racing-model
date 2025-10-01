@@ -2,6 +2,12 @@
     "cSpell.words": [
         "Assetto",
         "Competizione",
-        "Corsa"
+        "Corsa",
+        "acpmf",
+        "nolint",
+        "funlen",
+        "gosec",
+        "govet",
+        "Kers"
     ]
 }

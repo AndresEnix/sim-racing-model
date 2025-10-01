@@ -1,8 +1,6 @@
 package model
 
-
 import "time"
-
 
 // SharedMemoryData defines the interface for shared memory data configurations.
 type SharedMemoryData interface {
@@ -11,9 +9,8 @@ type SharedMemoryData interface {
 	ReadFrequency() time.Duration
 	Hash() uint32
 	MapValues(pointer uintptr)
-	CreateMetricsJSON() ([]byte, error)
+	CreateMetricsJSON() []byte
 }
-
 
 // Metrics defines the interface for metrics configurations.
 type Metrics interface {
@@ -21,4 +18,5 @@ type Metrics interface {
 	Name() string
 	DataPoints() []string
 	AddSessionInfo(userID, sessionID string)
+	New() Metrics
 }

@@ -1,16 +1,14 @@
 package model
 
-
 import (
+	"encoding/json"
 	"fmt"
 	"hash/fnv"
 	"log"
 	"math"
 	"time"
 	"unsafe"
-	"encoding/json"
 )
-
 
 // AccPhysicsData represents the structure of the ACC graphics data shared memory.
 type AccPhysicsData struct {
@@ -100,7 +98,6 @@ type AccPhysicsData struct {
 	GVibrations         float32
 	AbsVibrations       float32
 }
-
 
 //nolint:funlen
 // NewAccPhysicsData creates a new instance of AccPhysicsData with default values.
@@ -194,18 +191,15 @@ func NewAccPhysicsData() *AccPhysicsData {
 	}
 }
 
-
 // Name returns the name of the shared memory file for ACC physics data.
 func (memory *AccPhysicsData) Name() string {
 	return AccPhysicsFileName
 }
 
-
 // Path returns the full path to the shared memory file for ACC physics data.
 func (memory *AccPhysicsData) Path() string {
 	return AccFilesPrefix + memory.Name()
 }
-
 
 // ReadFrequency returns the frequency at which the ACC physics data should be read.
 func (memory *AccPhysicsData) ReadFrequency() time.Duration {
@@ -223,11 +217,10 @@ func (memory *AccPhysicsData) ReadFrequency() time.Duration {
 	return time.Duration(frequencyMs) * time.Millisecond
 }
 
-
 // Hash generates a hash based on the PacketID of the ACC physics data.
 func (memory *AccPhysicsData) Hash() uint32 {
 	hasher := fnv.New32a()
-	
+
 	_, err := fmt.Fprintf(hasher, "%d", memory.PacketID)
 	if err != nil {
 		log.Printf("WARNING: Failed to generate hash for %s: %s\n", memory.Name(), err.Error())
@@ -238,18 +231,16 @@ func (memory *AccPhysicsData) Hash() uint32 {
 	return hasher.Sum32()
 }
 
-
 //nolint:gosec
 // MapValues maps the values from a memory pointer to the AccPhysicsData struct.
 func (memory *AccPhysicsData) MapValues(pointer uintptr) {
-	newValue := (*AccPhysicsData)(unsafe.Pointer(pointer))//nolint:govet
+	newValue := (*AccPhysicsData)(unsafe.Pointer(pointer)) //nolint:govet
 	*memory = *newValue
 }
 
-
 //nolint:funlen
 // CreateMetricsJSON creates JSON bytes from the current AccPhysicsData.
-func (memory *AccPhysicsData) CreateMetricsJSON() ([]byte, error) {
+func (memory *AccPhysicsData) CreateMetricsJSON() []byte {
 	accPhysicsMetrics := &AccPhysicsMetrics{
 		ID:                  "",
 		UserID:              "",
@@ -307,11 +298,13 @@ func (memory *AccPhysicsData) CreateMetricsJSON() ([]byte, error) {
 		GVibrations:         float64(memory.GVibrations),
 		AbsVibrations:       float64(memory.AbsVibrations),
 	}
-	
+
 	metrics, err := json.Marshal(accPhysicsMetrics)
 	if err != nil {
-        return nil, fmt.Errorf("failed to marshal AccPhysicsData to JSON: %w", err)
-    }
-    
-    return metrics, nil
+		log.Println("failed to marshal AccGraphicsData to JSON: %w", err)
+
+		return nil
+	}
+
+	return metrics
 }

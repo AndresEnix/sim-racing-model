@@ -1,16 +1,14 @@
 package model
 
-
 import (
+	"encoding/json"
 	"fmt"
 	"hash/fnv"
 	"log"
 	"math"
 	"time"
 	"unsafe"
-	"encoding/json"
 )
-
 
 // AccGraphicsData represents the structure of the ACC graphics data shared memory.
 type AccGraphicsData struct {
@@ -102,7 +100,6 @@ type AccGraphicsData struct {
 	GapAhead                 int32
 	GapBehind                int32
 }
-
 
 //nolint:funlen
 // NewAccGraphicsData creates a new instance of AccGraphicsData with default values.
@@ -198,18 +195,15 @@ func NewAccGraphicsData() *AccGraphicsData {
 	}
 }
 
-
 // Name returns the name of the shared memory file for ACC graphics data.
 func (memory *AccGraphicsData) Name() string {
 	return AccGraphicsFileName
 }
 
-
 // Path returns the full path to the shared memory file for ACC graphics data.
 func (memory *AccGraphicsData) Path() string {
 	return AccFilesPrefix + memory.Name()
 }
-
 
 // ReadFrequency returns the frequency at which the ACC graphics data should be read.
 func (memory *AccGraphicsData) ReadFrequency() time.Duration {
@@ -227,7 +221,6 @@ func (memory *AccGraphicsData) ReadFrequency() time.Duration {
 	return time.Duration(frequencyMs) * time.Millisecond
 }
 
-
 // Hash generates a hash based on the PacketID of the ACC graphics data.
 func (memory *AccGraphicsData) Hash() uint32 {
 	hasher := fnv.New32a()
@@ -242,18 +235,16 @@ func (memory *AccGraphicsData) Hash() uint32 {
 	return hasher.Sum32()
 }
 
-
 //nolint:gosec
 // MapValues maps the values from a memory pointer to the AccGraphicsData struct.
 func (memory *AccGraphicsData) MapValues(pointer uintptr) {
-	newValue := (*AccGraphicsData)(unsafe.Pointer(pointer))//nolint:govet
+	newValue := (*AccGraphicsData)(unsafe.Pointer(pointer)) //nolint:govet
 	*memory = *newValue
 }
 
-
 //nolint:funlen
 // CreateMetricsJSON creates JSON bytes from the current AccPhysicsData.
-func (memory *AccGraphicsData) CreateMetricsJSON() ([]byte, error) {
+func (memory *AccGraphicsData) CreateMetricsJSON() []byte {
 	accGraphicsMetrics := &AccGraphicsMetrics{
 		ID:                       "",
 		UserID:                   "",
@@ -346,11 +337,13 @@ func (memory *AccGraphicsData) CreateMetricsJSON() ([]byte, error) {
 		GapAhead:                 int64(memory.GapAhead),
 		GapBehind:                int64(memory.GapBehind),
 	}
-	
+
 	metrics, err := json.Marshal(accGraphicsMetrics)
 	if err != nil {
-        return nil, fmt.Errorf("failed to marshal AccGraphicsData to JSON: %w", err)
-    }
-    
-    return metrics, nil
+		log.Println("failed to marshal AccGraphicsData to JSON: %w", err)
+
+		return nil
+	}
+
+	return metrics
 }

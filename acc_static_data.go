@@ -1,16 +1,14 @@
 package model
 
-
 import (
+	"encoding/json"
 	"fmt"
 	"hash/fnv"
 	"log"
 	"math"
 	"time"
 	"unsafe"
-	"encoding/json"
 )
-
 
 // AccStaticData represents the structure of the ACC graphics data shared memory.
 type AccStaticData struct {
@@ -60,7 +58,6 @@ type AccStaticData struct {
 	DryTyresName             [33]uint16
 	WetTyresName             [33]uint16
 }
-
 
 // NewAccStaticData creates a new instance of AccStaticData with default values.
 func NewAccStaticData() *AccStaticData {
@@ -113,18 +110,15 @@ func NewAccStaticData() *AccStaticData {
 	}
 }
 
-
 // Name returns the name of the shared memory file for ACC static data.
 func (memory *AccStaticData) Name() string {
 	return AccStaticFileName
 }
 
-
 // Path returns the full path to the shared memory file for ACC static data.
 func (memory *AccStaticData) Path() string {
 	return AccFilesPrefix + memory.Name()
 }
-
 
 // ReadFrequency returns the frequency at which the ACC static data should be read.
 func (memory *AccStaticData) ReadFrequency() time.Duration {
@@ -142,11 +136,10 @@ func (memory *AccStaticData) ReadFrequency() time.Duration {
 	return time.Duration(frequencyMs) * time.Millisecond
 }
 
-
 // Hash generates a hash based on a combination of fields of the ACC static data.
 func (memory *AccStaticData) Hash() uint32 {
 	hasher := fnv.New32a()
-	
+
 	_, err := hasher.Write([]byte(uint16ToString(memory.SmVersion[:])))
 	if err != nil {
 		log.Printf("WARNING: Failed to use SmVersion in %s hash: %s\n", memory.Name(), err.Error())
@@ -195,17 +188,15 @@ func (memory *AccStaticData) Hash() uint32 {
 	return hasher.Sum32()
 }
 
-
 //nolint:gosec
 // MapValues maps the values from a memory pointer to the AccStaticData struct.
 func (memory *AccStaticData) MapValues(pointer uintptr) {
-	newValue := (*AccStaticData)(unsafe.Pointer(pointer))//nolint:govet
+	newValue := (*AccStaticData)(unsafe.Pointer(pointer)) //nolint:govet
 	*memory = *newValue
 }
 
-
 // CreateMetricsJSON creates JSON bytes from the current AccStaticData.
-func (memory *AccStaticData) CreateMetricsJSON() ([]byte, error) {
+func (memory *AccStaticData) CreateMetricsJSON() []byte {
 	accStaticMetrics := &AccStaticMetrics{
 		ID:                  "",
 		UserID:              "",
@@ -237,11 +228,13 @@ func (memory *AccStaticData) CreateMetricsJSON() ([]byte, error) {
 		DryTyresName:        uint16ToString(memory.DryTyresName[:]),
 		WetTyresName:        uint16ToString(memory.WetTyresName[:]),
 	}
-	
+
 	metrics, err := json.Marshal(accStaticMetrics)
 	if err != nil {
-        return nil, fmt.Errorf("failed to marshal AccStaticData to JSON: %w", err)
-    }
-    
-    return metrics, nil
+		log.Println("failed to marshal AccGraphicsData to JSON: %w", err)
+
+		return nil
+	}
+
+	return metrics
 }

@@ -1,11 +1,9 @@
 package model
 
-
 import (
 	"reflect"
 	"time"
 )
-
 
 // AccStaticMetrics is the name of the AccStatic metrics.
 type AccStaticMetrics struct {
@@ -39,7 +37,6 @@ type AccStaticMetrics struct {
 	DryTyresName        string    `json:"dryTyresName"`
 	WetTyresName        string    `json:"wetTyresName"`
 }
-
 
 // NewAccStaticMetrics creates a new AccStaticMetrics struct with default values.
 func NewAccStaticMetrics() *AccStaticMetrics {
@@ -76,18 +73,20 @@ func NewAccStaticMetrics() *AccStaticMetrics {
 	}
 }
 
+// New creates a new AccStaticMetrics struct with default values.
+func (metric *AccStaticMetrics) New() Metrics {
+	return NewAccStaticMetrics()
+}
 
 // Game returns the name of the game for the AccStaticMetrics metric.
 func (metric *AccStaticMetrics) Game() string {
 	return AssettoCorsaCompetizione
 }
 
-
 // Name returns the name of the AccStaticMetrics metric.
 func (metric *AccStaticMetrics) Name() string {
 	return AccStaticMetricsName
 }
-
 
 // DataPoints returns the field names of the AccStaticMetrics struct.
 func (metric *AccStaticMetrics) DataPoints() []string {
@@ -101,7 +100,6 @@ func (metric *AccStaticMetrics) DataPoints() []string {
 
 	return fieldNames
 }
-
 
 // AddSessionInfo adds the user ID and session ID to the metric.
 func (metric *AccStaticMetrics) AddSessionInfo(userID, sessionID string) {
