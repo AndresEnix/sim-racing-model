@@ -9,3 +9,5 @@ linters:
         - model.Metrics
     funlen:
       lines: 100
+    lll:
+      line-length: 130

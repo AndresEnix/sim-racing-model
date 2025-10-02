@@ -198,7 +198,7 @@ func (memory *AccStaticData) MapValues(pointer uintptr) {
 // CreateMetricsJSON creates JSON bytes from the current AccStaticData.
 func (memory *AccStaticData) CreateMetricsJSON() Metrics {
 	return &AccStaticMetrics{
-		ID:                  "",
+		ID:                  0,
 		UserID:              "",
 		SessionID:           "",
 		Timestamp:           time.Now().UTC(),

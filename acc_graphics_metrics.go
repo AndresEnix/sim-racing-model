@@ -7,102 +7,102 @@ import (
 
 // AccGraphicsMetrics is the name of the AccGraphics metrics.
 type AccGraphicsMetrics struct {
-	ID                       string      `json:"id"`
-	UserID                   string      `json:"userId"`
-	SessionID                string      `json:"sessionId"`
-	Timestamp                time.Time   `json:"timestamp"`
-	PacketID                 int64       `json:"packetId"`
-	Status                   int64       `json:"status"`
-	Session                  int64       `json:"session"`
-	CurrentTime              string      `json:"currentTime"`
-	LastTime                 string      `json:"lastTime"`
-	BestTime                 string      `json:"bestTime"`
-	Split                    string      `json:"split"`
-	CompletedLaps            int64       `json:"completedLaps"`
-	Position                 int64       `json:"position"`
-	ICurrentTime             int64       `json:"iCurrentTime"`
-	ILastTime                int64       `json:"iLastTime"`
-	IBestTime                int64       `json:"iBestTime"`
-	SessionTimeLeft          float64     `json:"sessionTimeLeft"`
-	DistanceTraveled         float64     `json:"distanceTraveled"`
-	IsInPit                  int64       `json:"isInPit"`
-	CurrentSectorIndex       int64       `json:"currentSectorIndex"`
-	LastSectorTime           int64       `json:"lastSectorTime"`
-	NumberOfLaps             int64       `json:"numberOfLaps"`
-	TyreCompound             string      `json:"tyreCompound"`
-	NormalizedCarPosition    float64     `json:"normalizedCarPosition"`
-	ActiveCars               int64       `json:"activeCars"`
-	AarCoordinates           [][]float64 `json:"aarCoordinates"`
-	CarID                    []int64     `json:"carId"`
-	PlayerCarID              int64       `json:"playerCarId"`
-	PenaltyTime              float64     `json:"penaltyTime"`
-	Flag                     int64       `json:"flag"`
-	Penalty                  int64       `json:"penalty"`
-	IdealLineOn              int64       `json:"idealLineOn"`
-	IsInPitLane              int64       `json:"isInPitLane"`
-	SurfaceGrip              float64     `json:"surfaceGrip"`
-	MandatoryPitDone         int64       `json:"mandatoryPitDone"`
-	WindSpeed                float64     `json:"windSpeed"`
-	WindDirection            float64     `json:"windDirection"`
-	IsSetupMenuVisible       int64       `json:"isSetupMenuVisible"`
-	MainDisplayIndex         int64       `json:"mainDisplayIndex"`
-	SecondaryDisplayIndex    int64       `json:"secondaryDisplayIndex"`
-	Tc                       int64       `json:"tc"`
-	TcCut                    int64       `json:"tcCut"`
-	EngineMap                int64       `json:"engineMap"`
-	Abs                      int64       `json:"abs"`
-	FuelXLap                 float64     `json:"fuelXLap"`
-	RainLights               int64       `json:"rainLights"`
-	FlashingLights           int64       `json:"flashingLights"`
-	LightsStage              int64       `json:"lightsStage"`
-	ExhaustTemperature       float64     `json:"exhaustTemperature"`
-	WiperLV                  int64       `json:"wiperLv"`
-	DriverStintTotalTimeLeft int64       `json:"driverStintTotalTimeLeft"`
-	DriverStintTimeLeft      int64       `json:"driverStintTimeLeft"`
-	RainTyres                int64       `json:"rainTyres"`
-	SessionIndex             int64       `json:"sessionIndex"`
-	UsedFuel                 float64     `json:"usedFuel"`
-	DeltaLapTime             string      `json:"deltaLapTime"`
-	IDeltaLapTime            int64       `json:"iDeltaLapTime"`
-	EstimatedLapTime         string      `json:"estimatedLapTime"`
-	IEstimatedLapTime        int64       `json:"iEstimatedLapTime"`
-	IsDeltaPositive          int64       `json:"isDeltaPositive"`
-	ISplit                   int64       `json:"iSplit"`
-	IsValidLap               int64       `json:"isValidLap"`
-	FuelEstimatedLaps        float64     `json:"fuelEstimatedLaps"`
-	TrackStatus              string      `json:"trackStatus"`
-	MissingMandatoryPits     int64       `json:"missingMandatoryPits"`
-	Clock                    float64     `json:"clock"`
-	DirectionLightsLeft      int64       `json:"directionLightsLeft"`
-	DirectionLightsRight     int64       `json:"directionLightsRight"`
-	GlobalYellow             int64       `json:"globalYellow"`
-	GlobalYellow1            int64       `json:"globalYellow1"`
-	GlobalYellow2            int64       `json:"globalYellow2"`
-	GlobalYellow3            int64       `json:"globalYellow3"`
-	GlobalWhite              int64       `json:"globalWhite"`
-	GlobalGreen              int64       `json:"globalGreen"`
-	GlobalChequered          int64       `json:"globalChequered"`
-	GlobalRed                int64       `json:"globalRed"`
-	MfdTyreSet               int64       `json:"mfdTyreSet"`
-	MfdFuelToAdd             float64     `json:"mfdFuelToAdd"`
-	MfdTyrePressureLF        float64     `json:"mfdTyrePressureLf"`
-	MfdTyrePressureRF        float64     `json:"mfdTyrePressureRf"`
-	MfdTyrePressureLR        float64     `json:"mfdTyrePressureLr"`
-	MfdTyrePressureRR        float64     `json:"mfdTyrePressureRr"`
-	TrackGripStatus          int64       `json:"trackGripStatus"`
-	RainIntensity            int64       `json:"rainIntensity"`
-	RainIntensityIn10min     int64       `json:"rainIntensityIn10min"`
-	RainIntensityIn30min     int64       `json:"rainIntensityIn30min"`
-	CurrentTyreSet           int64       `json:"currentTyreSet"`
-	StrategyTyreSet          int64       `json:"strategyTyreSet"`
-	GapAhead                 int64       `json:"gapAhead"`
-	GapBehind                int64       `json:"gapBehind"`
+	ID                       uint        `gorm:"primaryKey;column:id"                              json:"id"`
+	UserID                   string      `gorm:"column:user_id"                                    json:"userId"`
+	SessionID                string      `gorm:"column:session_id"                                 json:"sessionId"`
+	Timestamp                time.Time   `gorm:"column:timestamp"                                  json:"timestamp"`
+	PacketID                 int64       `gorm:"column:packet_id"                                  json:"packetId"`
+	Status                   int64       `gorm:"column:status"                                     json:"status"`
+	Session                  int64       `gorm:"column:session"                                    json:"session"`
+	CurrentTime              string      `gorm:"column:current_time"                               json:"currentTime"`
+	LastTime                 string      `gorm:"column:last_time"                                  json:"lastTime"`
+	BestTime                 string      `gorm:"column:best_time"                                  json:"bestTime"`
+	Split                    string      `gorm:"column:split"                                      json:"split"`
+	CompletedLaps            int64       `gorm:"column:completed_laps"                             json:"completedLaps"`
+	Position                 int64       `gorm:"column:position"                                   json:"position"`
+	ICurrentTime             int64       `gorm:"column:i_current_time"                             json:"iCurrentTime"`
+	ILastTime                int64       `gorm:"column:i_last_time"                                json:"iLastTime"`
+	IBestTime                int64       `gorm:"column:i_best_time"                                json:"iBestTime"`
+	SessionTimeLeft          float64     `gorm:"column:session_time_left"                          json:"sessionTimeLeft"`
+	DistanceTraveled         float64     `gorm:"column:distance_traveled"                          json:"distanceTraveled"`
+	IsInPit                  int64       `gorm:"column:is_in_pit"                                  json:"isInPit"`
+	CurrentSectorIndex       int64       `gorm:"column:current_sector_index"                       json:"currentSectorIndex"`
+	LastSectorTime           int64       `gorm:"column:last_sector_time"                           json:"lastSectorTime"`
+	NumberOfLaps             int64       `gorm:"column:number_of_laps"                             json:"numberOfLaps"`
+	TyreCompound             string      `gorm:"column:tyre_compound"                              json:"tyreCompound"`
+	NormalizedCarPosition    float64     `gorm:"column:normalized_car_position"                    json:"normalizedCarPosition"`
+	ActiveCars               int64       `gorm:"column:active_cars"                                json:"activeCars"`
+	AarCoordinates           [][]float64 `gorm:"type:jsonb;serializer:json;column:aar_coordinates" json:"aarCoordinates"`
+	CarID                    []int64     `gorm:"type:jsonb;serializer:json;column:car_id"          json:"carId"`
+	PlayerCarID              int64       `gorm:"column:player_car_id"                              json:"playerCarId"`
+	PenaltyTime              float64     `gorm:"column:penalty_time"                               json:"penaltyTime"`
+	Flag                     int64       `gorm:"column:flag"                                       json:"flag"`
+	Penalty                  int64       `gorm:"column:penalty"                                    json:"penalty"`
+	IdealLineOn              int64       `gorm:"column:ideal_line_on"                              json:"idealLineOn"`
+	IsInPitLane              int64       `gorm:"column:is_in_pit_lane"                             json:"isInPitLane"`
+	SurfaceGrip              float64     `gorm:"column:surface_grip"                               json:"surfaceGrip"`
+	MandatoryPitDone         int64       `gorm:"column:mandatory_pit_done"                         json:"mandatoryPitDone"`
+	WindSpeed                float64     `gorm:"column:wind_speed"                                 json:"windSpeed"`
+	WindDirection            float64     `gorm:"column:wind_direction"                             json:"windDirection"`
+	IsSetupMenuVisible       int64       `gorm:"column:is_setup_menu_visible"                      json:"isSetupMenuVisible"`
+	MainDisplayIndex         int64       `gorm:"column:main_display_index"                         json:"mainDisplayIndex"`
+	SecondaryDisplayIndex    int64       `gorm:"column:secondary_display_index"                    json:"secondaryDisplayIndex"`
+	Tc                       int64       `gorm:"column:tc"                                         json:"tc"`
+	TcCut                    int64       `gorm:"column:tc_cut"                                     json:"tcCut"`
+	EngineMap                int64       `gorm:"column:engine_map"                                 json:"engineMap"`
+	Abs                      int64       `gorm:"column:abs"                                        json:"abs"`
+	FuelXLap                 float64     `gorm:"column:fuel_x_lap"                                 json:"fuelXLap"`
+	RainLights               int64       `gorm:"column:rain_lights"                                json:"rainLights"`
+	FlashingLights           int64       `gorm:"column:flashing_lights"                            json:"flashingLights"`
+	LightsStage              int64       `gorm:"column:lights_stage"                               json:"lightsStage"`
+	ExhaustTemperature       float64     `gorm:"column:exhaust_temperature"                        json:"exhaustTemperature"`
+	WiperLV                  int64       `gorm:"column:wiper_lv"                                   json:"wiperLv"`
+	DriverStintTotalTimeLeft int64       `gorm:"column:driver_stint_total_time_left"               json:"driverStintTotalTimeLeft"`
+	DriverStintTimeLeft      int64       `gorm:"column:driver_stint_time_left"                     json:"driverStintTimeLeft"`
+	RainTyres                int64       `gorm:"column:rain_tyres"                                 json:"rainTyres"`
+	SessionIndex             int64       `gorm:"column:session_index"                              json:"sessionIndex"`
+	UsedFuel                 float64     `gorm:"column:used_fuel"                                  json:"usedFuel"`
+	DeltaLapTime             string      `gorm:"column:delta_lap_time"                             json:"deltaLapTime"`
+	IDeltaLapTime            int64       `gorm:"column:i_delta_lap_time"                           json:"iDeltaLapTime"`
+	EstimatedLapTime         string      `gorm:"column:estimated_lap_time"                         json:"estimatedLapTime"`
+	IEstimatedLapTime        int64       `gorm:"column:i_estimated_lap_time"                       json:"iEstimatedLapTime"`
+	IsDeltaPositive          int64       `gorm:"column:is_delta_positive"                          json:"isDeltaPositive"`
+	ISplit                   int64       `gorm:"column:i_split"                                    json:"iSplit"`
+	IsValidLap               int64       `gorm:"column:is_valid_lap"                               json:"isValidLap"`
+	FuelEstimatedLaps        float64     `gorm:"column:fuel_estimated_laps"                        json:"fuelEstimatedLaps"`
+	TrackStatus              string      `gorm:"column:track_status"                               json:"trackStatus"`
+	MissingMandatoryPits     int64       `gorm:"column:missing_mandatory_pits"                     json:"missingMandatoryPits"`
+	Clock                    float64     `gorm:"column:clock"                                      json:"clock"`
+	DirectionLightsLeft      int64       `gorm:"column:direction_lights_left"                      json:"directionLightsLeft"`
+	DirectionLightsRight     int64       `gorm:"column:direction_lights_right"                     json:"directionLightsRight"`
+	GlobalYellow             int64       `gorm:"column:global_yellow"                              json:"globalYellow"`
+	GlobalYellow1            int64       `gorm:"column:global_yellow1"                             json:"globalYellow1"`
+	GlobalYellow2            int64       `gorm:"column:global_yellow2"                             json:"globalYellow2"`
+	GlobalYellow3            int64       `gorm:"column:global_yellow3"                             json:"globalYellow3"`
+	GlobalWhite              int64       `gorm:"column:global_white"                               json:"globalWhite"`
+	GlobalGreen              int64       `gorm:"column:global_green"                               json:"globalGreen"`
+	GlobalChequered          int64       `gorm:"column:global_chequered"                           json:"globalChequered"`
+	GlobalRed                int64       `gorm:"column:global_red"                                 json:"globalRed"`
+	MfdTyreSet               int64       `gorm:"column:mfd_tyre_set"                               json:"mfdTyreSet"`
+	MfdFuelToAdd             float64     `gorm:"column:mfd_fuel_to_add"                            json:"mfdFuelToAdd"`
+	MfdTyrePressureLF        float64     `gorm:"column:mfd_tyre_pressure_lf"                       json:"mfdTyrePressureLf"`
+	MfdTyrePressureRF        float64     `gorm:"column:mfd_tyre_pressure_rf"                       json:"mfdTyrePressureRf"`
+	MfdTyrePressureLR        float64     `gorm:"column:mfd_tyre_pressure_lr"                       json:"mfdTyrePressureLr"`
+	MfdTyrePressureRR        float64     `gorm:"column:mfd_tyre_pressure_rr"                       json:"mfdTyrePressureRr"`
+	TrackGripStatus          int64       `gorm:"column:track_grip_status"                          json:"trackGripStatus"`
+	RainIntensity            int64       `gorm:"column:rain_intensity"                             json:"rainIntensity"`
+	RainIntensityIn10min     int64       `gorm:"column:rain_intensity_in_10min"                    json:"rainIntensityIn10min"`
+	RainIntensityIn30min     int64       `gorm:"column:rain_intensity_in_30min"                    json:"rainIntensityIn30min"`
+	CurrentTyreSet           int64       `gorm:"column:current_tyre_set"                           json:"currentTyreSet"`
+	StrategyTyreSet          int64       `gorm:"column:strategy_tyre_set"                          json:"strategyTyreSet"`
+	GapAhead                 int64       `gorm:"column:gap_ahead"                                  json:"gapAhead"`
+	GapBehind                int64       `gorm:"column:gap_behind"                                 json:"gapBehind"`
 }
 
 // NewAccGraphicsMetrics creates a new AccGraphicsMetrics struct with default values.
 func NewAccGraphicsMetrics() *AccGraphicsMetrics {
 	return &AccGraphicsMetrics{
-		ID:                       "",
+		ID:                       0,
 		UserID:                   "",
 		SessionID:                "",
 		Timestamp:                time.Time{},
@@ -233,6 +233,11 @@ func (metric *AccGraphicsMetrics) DataPoints() []string {
 	}
 
 	return names
+}
+
+// TableName returns the name of the DB table for the AccGraphicsMetrics metric.
+func (metric *AccGraphicsMetrics) TableName() string {
+	return "acc_graphics_metrics"
 }
 
 // AddSessionInfo adds the user ID and session ID to the metric.

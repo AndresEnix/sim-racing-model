@@ -17,6 +17,7 @@ type Metrics interface {
 	Game() string
 	Name() string
 	DataPoints() []string
+	TableName() string
 	AddSessionInfo(userID, sessionID string)
 	New() Metrics
 }

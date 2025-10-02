@@ -240,7 +240,7 @@ func (memory *AccPhysicsData) MapValues(pointer uintptr) {
 // CreateMetricsJSON creates JSON bytes from the current AccPhysicsData.
 func (memory *AccPhysicsData) CreateMetricsJSON() Metrics {
 	return &AccPhysicsMetrics{
-		ID:                  "",
+		ID:                  0,
 		UserID:              "",
 		SessionID:           "",
 		Timestamp:           time.Now().UTC(),
